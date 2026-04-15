@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700&family=Syne:wght@400;700;800&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   GLOBAL BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  background: #0a0a0f;
+  color: #f0f0f0;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.app-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   TOP NAV — dropdown
+   ============================================================ */
+.top-nav {
+  position: relative;
+  margin-bottom: 36px;
+  animation: fadeDown 0.5s ease both;
+  z-index: 100;
+}
+
+.top-nav-select {
+  width: 100%;
+  background: #12121a;
+  border: 1px solid #2a2a3d;
+  border-radius: 10px;
+  padding: 14px 44px 14px 16px;
+  color: #f0f0f0;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.top-nav-select:hover { border-color: #444460; }
+.top-nav-select:focus { border-color: #666680; }
+
+.top-nav-arrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666680;
+  font-size: 12px;
+}
+
+/* active accent line under the nav */
+.top-nav-accent {
+  height: 2px;
+  border-radius: 2px;
+  margin-top: 4px;
+  transition: background 0.3s;
+}
+.nav-sched  { background: #e8ff47; }
+.nav-hair   { background: #d4814a; }
+.nav-skin   { background: #3dd9b3; }
+
+/* ============================================================
+   SECTION VISIBILITY
+   ============================================================ */
+.section { display: none; }
+.section.active { display: block; animation: fadeUp 0.3s ease both; }
+
+/* ============================================================
+   SCHEDULE SECTION
+   ============================================================ */
+.sched-header { margin-bottom: 32px; animation: fadeDown 0.6s ease both; }
+
+.sched-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #e8ff47;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.sched-h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 12vw, 76px);
+  line-height: 0.9;
+  color: #f0f0f0;
+  letter-spacing: 2px;
+}
+
+.sched-h1 span { color: #e8ff47; }
+
+.sched-subtitle {
+  font-size: 13px;
+  color: #666680;
+  margin-top: 10px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* Legend */
+.sched-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #666680;
+  font-family: 'DM Mono', monospace;
+}
+
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* Day tabs */
+.day-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.day-tab {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 1px solid #2a2a3d;
+  background: #12121a;
+  color: #666680;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.day-tab:hover { border-color: #e8ff47; color: #e8ff47; }
+.day-tab.active { background: #e8ff47; color: #0a0a0f; border-color: #e8ff47; }
+.day-tab.school-day { border-color: #ff6b9d44; }
+.day-tab.school-day.active { background: #ff6b9d; border-color: #ff6b9d; color: #0a0a0f; }
+.day-tab.weekend-day { border-color: #b47fff44; }
+.day-tab.weekend-day.active { background: #b47fff; border-color: #b47fff; color: #0a0a0f; }
+
+/* Day views */
+.sched-day { display: none; animation: fadeUp 0.3s ease both; }
+.sched-day.active { display: block; }
+
+.day-type-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.badge-school { background: #ff6b9d22; color: #ff6b9d; border: 1px solid #ff6b9d44; }
+.badge-home   { background: #47c8ff22; color: #47c8ff; border: 1px solid #47c8ff44; }
+.badge-weekend { background: #b47fff22; color: #b47fff; border: 1px solid #b47fff44; }
+
+.schedule { display: flex; flex-direction: column; gap: 3px; }
+
+.block {
+  display: flex;
+  align-items: stretch;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #2a2a3d;
+  background: #1a1a26;
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: slideIn 0.3s ease both;
+}
+
+.block:hover { transform: translateX(3px); box-shadow: -3px 0 0 #e8ff47; }
+
+.block-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #666680;
+  padding: 12px 14px;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  background: #12121a;
+  border-right: 1px solid #2a2a3d;
+  white-space: nowrap;
+}
+
+.block-accent { width: 3px; flex-shrink: 0; }
+.block-content { padding: 10px 14px; flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.block-title { font-size: 13px; font-weight: 500; line-height: 1.3; }
+.block-detail { font-size: 11px; color: #666680; margin-top: 2px; font-family: 'DM Mono', monospace; }
+.block-icon { font-size: 18px; flex-shrink: 0; }
+
+.b-wake    { border-color: #e8ff4744; } .b-wake .block-accent    { background: #e8ff47; }
+.b-workout { border-color: #e8ff4744; } .b-workout .block-accent { background: #e8ff47; }
+.b-japanese{ border-color: #47c8ff44; } .b-japanese .block-accent{ background: #47c8ff; }
+.b-book    { border-color: #b47fff44; } .b-book .block-accent    { background: #b47fff; }
+.b-study   { border-color: #ff6b6b44; } .b-study .block-accent   { background: #ff6b6b; }
+.b-transit { border-color: #ff9d4744; } .b-transit .block-accent { background: #ff9d47; }
+.b-school  { border-color: #ff6b9d44; } .b-school .block-accent  { background: #ff6b9d; }
+.b-meal    { border-color: #ffffff22; } .b-meal .block-accent    { background: #ffffff44; }
+.b-free    { border-color: #ffffff11; } .b-free .block-accent    { background: #333; }
+.b-sleep   { border-color: #6666ff33; } .b-sleep .block-accent   { background: #6666ff; }
+.b-shower  { border-color: #47ffda44; } .b-shower .block-accent  { background: #47ffda; }
+
+/* Schedule rules */
+.sched-rules {
+  margin-top: 32px;
+  border: 1px solid #2a2a3d;
+  border-radius: 8px;
+  padding: 20px;
+  background: #12121a;
+}
+
+.sched-rules-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: #e8ff47;
+  margin-bottom: 14px;
+  letter-spacing: 1px;
+}
+
+.sched-rule {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a2a3d;
+  font-size: 13px;
+}
+
+.sched-rule:last-child { border-bottom: none; }
+.sched-rule-num { font-family: 'DM Mono', monospace; font-size: 11px; color: #e8ff47; min-width: 24px; padding-top: 1px; }
+.sched-rule-text { color: #f0f0f0; line-height: 1.5; }
+.sched-rule-text strong { color: #47c8ff; }
+
+/* ============================================================
+   HAIR CARE SECTION — warm dark theme
+   ============================================================ */
+.hair-section {
+  background: transparent;
+}
+
+/* Warm dark overlay feel via a pseudo on the section */
+.hair-section .hair-inner {
+  position: relative;
+}
+
+.hair-header { margin-bottom: 36px; }
+
+.hair-tag {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  color: #d4814a;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.hair-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(38px, 10vw, 60px);
+  line-height: 1;
+  color: #f0ece8;
+  font-weight: 900;
+}
+
+.hair-h1 em { color: #d4814a; font-style: italic; }
+
+.hair-subtitle {
+  font-size: 13px;
+  color: #7a6a5a;
+  margin-top: 12px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Products bar */
+.products-bar {
+  background: #16120e;
+  border: 1px solid #3a2e24;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 28px;
+}
+
+.products-bar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #f0ece8;
+}
+
+.products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.product-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #7a6a5a;
+  font-family: 'Lato', sans-serif;
+}
+
+.product-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Hair day tabs */
+.hair-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.hair-tab {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1.5px solid #3a2e24;
+  background: #16120e;
+  color: #7a6a5a;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hair-tab:hover { border-color: #d4814a; color: #d4814a; }
+.hair-tab.active { background: #d4814a; color: #0a0a0f; border-color: #d4814a; }
+
+/* Hair day views */
+.hair-day { display: none; animation: fadeUp 0.3s ease both; }
+.hair-day.active { display: block; }
+
+.day-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.day-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #f0ece8;
+  line-height: 1.1;
+}
+
+.day-badge {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 4px;
+  font-family: 'Lato', sans-serif;
+}
+
+.badge-wash   { background: #d4814a22; color: #d4814a; border: 1px solid #d4814a44; }
+.badge-cowash { background: #4a8a5a22; color: #6aaa7a; border: 1px solid #4a8a5a44; }
+.badge-spritz { background: #7a5c8a22; color: #aa8aba; border: 1px solid #7a5c8a44; }
+
+.steps { display: flex; flex-direction: column; gap: 2px; }
+
+.phase-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #5a4a3a;
+  padding: 16px 0 8px;
+}
+
+.phase-label:first-child { padding-top: 0; }
+
+.step {
+  display: flex;
+  background: #16120e;
+  border: 1px solid #3a2e24;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: slideIn 0.3s ease both;
+  transition: box-shadow 0.2s;
+  margin-bottom: 4px;
+}
+
+.step:hover { box-shadow: 0 4px 16px rgba(212,129,74,0.12); }
+
+.step-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #3a2e24;
+  padding: 16px 14px;
+  min-width: 50px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #120e0a;
+  border-right: 1px solid #3a2e24;
+  line-height: 1;
+  padding-top: 18px;
+}
+
+.step-bar { width: 3px; flex-shrink: 0; }
+.step-body { padding: 14px 16px; flex: 1; }
+
+.step-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #f0ece8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: 'Lato', sans-serif;
+}
+
+.step-product {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: 'Lato', sans-serif;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: #7a6a5a;
+  line-height: 1.6;
+  font-weight: 300;
+  font-family: 'Lato', sans-serif;
+}
+
+.step-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #d4814a;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Step bar colors */
+.bar-shampoo { background: #c8883a; }
+.bar-deep    { background: #8a5c9a; }
+.bar-cowash  { background: #4a8a5a; }
+.bar-leavein { background: #4a6a8a; }
+.bar-cream   { background: #8a6a4a; }
+.bar-oil     { background: #7a7a3a; }
+.bar-water   { background: #3a7a8a; }
+.bar-tool    { background: #6a6a8a; }
+.bar-none    { background: #3a2e24; }
+
+/* Step product pill colors */
+.p-shampoo { background: #c8883a22; color: #c8883a; }
+.p-deep    { background: #8a5c9a22; color: #aa7aba; }
+.p-cowash  { background: #4a8a5a22; color: #6aaa7a; }
+.p-leavein { background: #4a6a8a22; color: #6a8aaa; }
+.p-cream   { background: #8a6a4a22; color: #aa8a6a; }
+.p-oil     { background: #7a7a3a22; color: #9a9a5a; }
+.p-water   { background: #3a7a8a22; color: #5a9aaa; }
+.p-tool    { background: #6a6a8a22; color: #8a8aaa; }
+
+/* Tips box */
+.tips-box {
+  background: #120e0a;
+  border: 1px solid #3a2e24;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.tips-box-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d4814a;
+  margin-bottom: 10px;
+  font-family: 'Lato', sans-serif;
+}
+
+.tip-item {
+  font-size: 12px;
+  color: #7a6a5a;
+  line-height: 1.6;
+  padding: 4px 0;
+  border-bottom: 1px solid #3a2e24;
+  display: flex;
+  gap: 8px;
+  font-family: 'Lato', sans-serif;
+}
+
+.tip-item:last-child { border-bottom: none; }
+
+/* Hair rules */
+.hair-rules {
+  margin-top: 32px;
+  background: #120e0a;
+  border: 1px solid #3a2e24;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.hair-rules-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: #d4814a;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.hair-rule {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a1e14;
+  font-size: 13px;
+}
+
+.hair-rule:last-child { border-bottom: none; }
+.hair-rule-icon { flex-shrink: 0; font-size: 16px; }
+.hair-rule-text { color: #7a6a5a; line-height: 1.5; font-weight: 300; font-family: 'Lato', sans-serif; }
+.hair-rule-text strong { color: #f0ece8; font-weight: 700; }
+
+/* ============================================================
+   SHARED ANIMATIONS
+   ============================================================ */
+@keyframes fadeDown { from { opacity:0; transform: translateY(-14px); } to { opacity:1; transform: none; } }
+@keyframes fadeUp   { from { opacity:0; transform: translateY(10px);  } to { opacity:1; transform: none; } }
+@keyframes slideIn  { from { opacity:0; transform: translateX(-6px);  } to { opacity:1; transform: none; } }
+
+/* ============================================================
+   SKIN CARE SECTION
+   ============================================================ */
+.skin-header { margin-bottom: 32px; }
+
+.skin-tag {
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  color: #3dd9b3;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.skin-h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(44px, 11vw, 68px);
+  line-height: 0.95;
+  font-weight: 800;
+  color: #eef2f7;
+  letter-spacing: -1px;
+}
+
+.skin-h1 em { color: #3dd9b3; font-style: normal; }
+
+.skin-subtitle {
+  font-size: 13px;
+  color: #4a6070;
+  margin-top: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-products-bar {
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.skin-products-bar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #eef2f7;
+}
+
+.skin-products-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.skin-product-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #4a6070;
+  font-family: 'Nunito', sans-serif;
+}
+
+.product-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+.pill-cleanser   { background: #5b9cf622; color: #5b9cf6; border: 1px solid #5b9cf644; }
+.pill-moisturizer{ background: #3dd9b322; color: #3dd9b3; border: 1px solid #3dd9b344; }
+.pill-exfoliant  { background: #f5a62322; color: #f5a623; border: 1px solid #f5a62344; }
+.pill-lips       { background: #f56e6e22; color: #f56e6e; border: 1px solid #f56e6e44; }
+
+.skin-day-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.skin-day-tab {
+  flex: 1;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 9px 4px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: #4a6070;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skin-day-tab:hover { color: #eef2f7; }
+.skin-day-tab.active-regular { background: #5b9cf6; color: #080b0f; }
+.skin-day-tab.active-sal     { background: #2a1f0e; color: #f5a623; border: 1px solid #f5a62344; }
+
+.skin-routine-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #2a3a48;
+  padding: 14px 0 8px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-routine-label:first-child { padding-top: 0; }
+
+.skin-steps { display: flex; flex-direction: column; gap: 3px; }
+
+.skin-step {
+  display: flex;
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.15s;
+  margin-bottom: 3px;
+}
+
+.skin-step:hover { box-shadow: 0 0 0 1px #3dd9b3; transform: translateX(2px); }
+
+.skin-step-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e2830;
+  padding: 16px 14px;
+  min-width: 48px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #0a0e12;
+  border-right: 1px solid #1e2830;
+  padding-top: 18px;
+  line-height: 1;
+}
+
+.skin-step-bar { width: 3px; flex-shrink: 0; }
+.skin-step-body { padding: 14px 16px; flex: 1; }
+
+.skin-step-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #eef2f7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.freq-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.freq-weekly { background: #f5a62322; color: #f5a623; border: 1px solid #f5a62344; }
+
+.skin-step-desc {
+  font-size: 13px;
+  color: #4a6070;
+  line-height: 1.65;
+  font-weight: 400;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-step-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #3dd9b3;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.5;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-step-tip.warning { color: #f5a623; }
+.skin-step-tip.info    { color: #5b9cf6; }
+
+.bar-cleanser    { background: #5b9cf6; }
+.bar-moisturizer { background: #3dd9b3; }
+.bar-exfoliant   { background: #f5a623; }
+.bar-lips        { background: #f56e6e; }
+
+.skin-rules {
+  margin-top: 28px;
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.skin-rules-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #3dd9b3;
+  margin-bottom: 16px;
+}
+
+.skin-rule {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #1e2830;
+  font-size: 13px;
+}
+
+.skin-rule:last-child { border-bottom: none; }
+.skin-rule-icon { flex-shrink: 0; font-size: 16px; }
+.skin-rule-text { color: #4a6070; line-height: 1.6; font-family: 'Nunito', sans-serif; }
+.skin-rule-text strong { color: #eef2f7; font-weight: 700; }
+
+</style>
+</head>
+<body>
+<div class="app-container">
+
+  <!-- TOP NAV DROPDOWN -->
+  <div class="top-nav">
+    <select class="top-nav-select" id="top-nav-select" onchange="showSection(this.value)">
+      <option value="schedule">📅  Schedule</option>
+      <option value="hair">💧  Hair Care</option>
+      <option value="skin">✨  Skin Care</option>
+    </select>
+    <div class="top-nav-arrow">▼</div>
+    <div class="top-nav-accent nav-sched" id="nav-accent"></div>
+  </div>
+
+  <!-- ======================================================
+       SCHEDULE SECTION
+       ====================================================== -->
+  <div class="section active" id="section-schedule">
+
+    <div class="sched-header">
+      <div class="sched-tag">// daily system v1.0</div>
+      <h1 class="sched-h1">TAKE<br><span>CONTROL</span></h1>
+      <div class="sched-subtitle">5:00AM WAKE · CÉGEP SESSION · NO EXCUSES</div>
+    </div>
+
+    <div class="sched-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#e8ff47"></div>Wake/Workout</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div>Study</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#47c8ff"></div>Japanese</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#b47fff"></div>Book</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff9d47"></div>Transit</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6b9d"></div>Class</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#47ffda"></div>Shower / Hair</div>
+    </div>
+
+    <div class="day-tabs">
+      <button class="day-tab weekend-day active" onclick="showSchedDay('sunday', this)">Sun</button>
+      <button class="day-tab school-day" onclick="showSchedDay('monday', this)">Mon</button>
+      <button class="day-tab" onclick="showSchedDay('tuesday', this)">Tue</button>
+      <button class="day-tab" onclick="showSchedDay('wednesday', this)">Wed</button>
+      <button class="day-tab school-day" onclick="showSchedDay('thursday', this)">Thu</button>
+      <button class="day-tab school-day" onclick="showSchedDay('friday', this)">Fri</button>
+      <button class="day-tab weekend-day" onclick="showSchedDay('saturday', this)">Sat</button>
+    </div>
+
+    <!-- SUNDAY -->
+    <div class="sched-day active" id="sched-sunday">
+      <div class="day-type-badge badge-weekend">🏡 Day Off — Sunday (Mom's → Home)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">7:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-japanese"><div class="block-time">7:15 – 8:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Anki Only</div><div class="block-detail">Keep the streak alive. Light and easy.</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-meal"><div class="block-time">8:30 – 9:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Breakfast</div></div><div class="block-icon">🍳</div></div></div>
+        <div class="block b-free"><div class="block-time">9:00 – ~14:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Mom Time — Full Relax</div><div class="block-detail">No studying. No guilt. You earned a real day off.</div></div><div class="block-icon">📺</div></div></div>
+        <div class="block b-transit"><div class="block-time">~14:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Travel Home</div><div class="block-detail">Anki on the way back if you feel like it</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-meal"><div class="block-time">~16:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Arrive Home — Dinner + Reset</div><div class="block-detail">Prep clothes, pack bag, mindset for Monday</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-shower"><div class="block-time">17:00 – 18:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Full Hair Wash Routine</div><div class="block-detail">Shampoo, deep condition, style — see Hair Care tab</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-free"><div class="block-time">18:30 – 21:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time — Hair Drying</div><div class="block-detail">Don't touch the hair. Relax while it dries.</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down — No exceptions</div><div class="block-detail">5am wake tomorrow. Bonnet on once hair is dry.</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- MONDAY -->
+    <div class="sched-day" id="sched-monday">
+      <div class="day-type-badge badge-school">📚 School Day — Monday</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div><div class="block-detail">No snooze. Phone across the room.</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:10 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout</div><div class="block-detail">Home — beginner bodyweight/equipment routine</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">6:00 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div><div class="block-detail">Pack bag the night before</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-japanese"><div class="block-time">6:30 – 7:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese Study</div><div class="block-detail">Anki flashcards + grammar — quiet morning focus</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-transit"><div class="block-time">7:30 – 9:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit to School</div><div class="block-detail">Anki on phone, podcast, or review notes</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-study"><div class="block-time">9:30 – 10:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Pre-class Review</div><div class="block-detail">Review Calcul notes before class</div></div><div class="block-icon">📖</div></div></div>
+        <div class="block b-school"><div class="block-time">10:00 – 12:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Calcul Intégral</div><div class="block-detail">B-515 — Michaël Medeiros Charbonneau</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-meal"><div class="block-time">12:00 – 12:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch</div><div class="block-detail">Eat, take a walk, decompress</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">12:45 – 15:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Session</div><div class="block-detail">Calcul + Ondes homework & exercises</div></div><div class="block-icon">✏️</div></div></div>
+        <div class="block b-school"><div class="block-time">16:00 – 17:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Ondes et Physique Moderne</div><div class="block-detail">F-445 — Jean-François Courville</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-transit"><div class="block-time">17:00 – 19:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit Home</div><div class="block-detail">Review today's notes, Anki Japanese</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-meal"><div class="block-time">19:00 – 19:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner</div><div class="block-detail">Cook something real, no screens</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-book"><div class="block-time">19:30 – 20:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div><div class="block-detail">1 hour, no editing, just output</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-free"><div class="block-time">20:30 – 21:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div><div class="block-detail">Earned. Hard stop at 21:30.</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:30 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Prep</div><div class="block-detail">Pack bag, plan tomorrow, no screens</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- TUESDAY -->
+    <div class="sched-day" id="sched-tuesday">
+      <div class="day-type-badge badge-home">🏠 Full Home Day — Tuesday</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div><div class="block-detail">Phone across the room. No snooze.</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:10 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout</div><div class="block-detail">Home session — different focus than Monday</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">6:00 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-japanese"><div class="block-time">6:30 – 8:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Deep Session</div><div class="block-detail">Grammar study + new vocab + Anki (90 min)</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-study"><div class="block-time">8:00 – 10:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 1</div><div class="block-detail">Calcul Intégral — problems + theory</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-meal"><div class="block-time">10:30 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Break + Snack</div><div class="block-detail">Walk outside if possible</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-study"><div class="block-time">11:00 – 13:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 2</div><div class="block-detail">Ondes et Physique Moderne</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-meal"><div class="block-time">13:00 – 13:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch Break</div><div class="block-detail">Full stop. Eat properly.</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">13:45 – 14:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Communication — Quick Review</div><div class="block-detail">1h max — just skim the PowerPoints</div></div><div class="block-icon">📸</div></div></div>
+        <div class="block b-book"><div class="block-time">14:45 – 16:15</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div><div class="block-detail">Best creative window of the afternoon</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-meal"><div class="block-time">16:15 – 16:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-free"><div class="block-time">16:45 – 21:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div><div class="block-detail">Big reward for a big study day. Hard stop 21:00.</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Prep</div><div class="block-detail">Plan Wednesday, no need to pack</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY -->
+    <div class="sched-day" id="sched-wednesday">
+      <div class="day-type-badge badge-home">🏠 Full Home Day — Wednesday</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:10 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">6:00 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-japanese"><div class="block-time">6:30 – 8:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Deep Session</div><div class="block-detail">Grammar + new vocab + Anki (90 min)</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-study"><div class="block-time">8:00 – 10:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 1</div><div class="block-detail">Calcul Intégral — problems + theory</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-meal"><div class="block-time">10:30 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Break + Snack</div><div class="block-detail">Walk outside if possible</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-study"><div class="block-time">11:00 – 13:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 2</div><div class="block-detail">Ondes et Physique Moderne</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-meal"><div class="block-time">13:00 – 13:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch Break</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">13:45 – 14:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Communication — Quick Review</div><div class="block-detail">1h max — just skim the PowerPoints</div></div><div class="block-icon">📸</div></div></div>
+        <div class="block b-book"><div class="block-time">14:45 – 16:15</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-meal"><div class="block-time">16:15 – 16:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-free"><div class="block-time">16:45 – 19:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-shower"><div class="block-time">19:30 – 20:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Hair Co-Wash Routine</div><div class="block-detail">Full co-wash, style, air dry — see Hair Care tab</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Pack Bag</div><div class="block-detail">Early departure Thursday — pack tonight</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- THURSDAY -->
+    <div class="sched-day" id="sched-thursday">
+      <div class="day-type-badge badge-school">📚 School Day — Thursday (Early Departure)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:05 – 5:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout — 40 min</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">5:45 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div><div class="block-detail">Bag already packed from last night</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-transit"><div class="block-time">6:30 – 8:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit to School</div><div class="block-detail">Anki + review Communication notes</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-school"><div class="block-time">8:30 – 10:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Communication, Art et Photo</div><div class="block-detail">F-330 — Juliana Sofia Nuzzo</div></div><div class="block-icon">📸</div></div></div>
+        <div class="block b-transit"><div class="block-time">10:00 – 12:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit Home</div><div class="block-detail">Anki on the ride</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-meal"><div class="block-time">12:00 – 12:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">12:30 – 15:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study — Calcul + Ondes</div></div><div class="block-icon">📖</div></div></div>
+        <div class="block b-book"><div class="block-time">15:00 – 16:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-meal"><div class="block-time">16:00 – 16:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner (early)</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-free"><div class="block-time">16:30 – 19:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-shower"><div class="block-time">19:30 – 20:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Hair Co-Wash Routine</div><div class="block-detail">Full co-wash, style, air dry — see Hair Care tab</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Pack Bag</div><div class="block-detail">Leave at 6:30am tomorrow</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- FRIDAY -->
+    <div class="sched-day" id="sched-friday">
+      <div class="day-type-badge badge-school">📚 School Day — Friday (Early Departure)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:05 – 5:35</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout — 30 min</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">5:35 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div><div class="block-detail">Quick. Bag already packed from last night.</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-transit"><div class="block-time">6:00 – 8:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit to School</div><div class="block-detail">Anki + review Calcul notes</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-school"><div class="block-time">8:00 – 10:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Calcul Intégral</div><div class="block-detail">B-515 — Michaël Medeiros Charbonneau</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-school"><div class="block-time">10:00 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Ondes et Physique Moderne</div><div class="block-detail">F-470 — Jean-François Courville</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-transit"><div class="block-time">11:00 – 13:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit Home (to Mom's)</div><div class="block-detail">Anki on the ride</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-free"><div class="block-time">13:00+</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Mom's — Shows + Games</div><div class="block-detail">You've earned it. Full relax.</div></div><div class="block-icon">🎮</div></div></div>
+      </div>
+    </div>
+
+    <!-- SATURDAY -->
+    <div class="sched-day" id="sched-saturday">
+      <div class="day-type-badge badge-weekend">🏡 Weekend — Saturday (Mom's)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">7:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div><div class="block-detail">7am — still early, still disciplined</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-japanese"><div class="block-time">7:15 – 8:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Anki + Review</div><div class="block-detail">75 min — good session before the day starts</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-meal"><div class="block-time">8:30 – 9:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Breakfast</div></div><div class="block-icon">🍳</div></div></div>
+        <div class="block b-study"><div class="block-time">9:00 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block</div><div class="block-detail">2h — Calcul or Ondes, most urgent thing</div></div><div class="block-icon">📖</div></div></div>
+        <div class="block b-book"><div class="block-time">11:00 – 12:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div><div class="block-detail">1h before the day goes social</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-free"><div class="block-time">12:00+</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Mom Time — Shows + Games</div><div class="block-detail">Rest. Recharge. You did the work.</div></div><div class="block-icon">📺</div></div></div>
+      </div>
+    </div>
+
+    <!-- Schedule Rules -->
+    <div class="sched-rules">
+      <div class="sched-rules-title">THE RULES</div>
+      <div class="sched-rule"><div class="sched-rule-num">01</div><div class="sched-rule-text"><strong>Phone across the room</strong> every night. No exceptions. This is how you actually wake up at 5am.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">02</div><div class="sched-rule-text"><strong>Games only after all blocks are done.</strong> Not during. Not "just 30 min first." After.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">03</div><div class="sched-rule-text"><strong>Transit time is productive time.</strong> Anki on the phone during all 4 hours of daily commute = ~1,000 Japanese cards/week.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">04</div><div class="sched-rule-text"><strong>Book writing = output only.</strong> No editing during the session. Just write. Fix it later.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">05</div><div class="sched-rule-text"><strong>Missed a block?</strong> Don't skip the next one. Just continue. Consistency beats perfection.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">06</div><div class="sched-rule-text"><strong>Weekends at mom's are protected.</strong> Do your morning blocks early and then fully enjoy the time.</div></div>
+    </div>
+
+  </div><!-- end section-schedule -->
+
+  <!-- ======================================================
+       HAIR CARE SECTION
+       ====================================================== -->
+  <div class="section" id="section-hair">
+
+    <div class="hair-header">
+      <div class="hair-tag">// hair care system</div>
+      <h1 class="hair-h1">Your <em>Curl</em><br>Routine</h1>
+      <div class="hair-subtitle">Low porosity · Afro-textured · Goal: big, soft, frizz-free curls</div>
+    </div>
+
+    <div class="products-bar">
+      <div class="products-bar-title">Your Products</div>
+      <div class="products-grid">
+        <div class="product-tag"><div class="product-dot" style="background:#c8573a"></div>Kinky-Curly Come Clean (clarify)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#c8883a"></div>Design Essentials A&A (shampoo)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#4a8a5a"></div>As I Am CoWash</div>
+        <div class="product-tag"><div class="product-dot" style="background:#8a5c9a"></div>Mielle Babassu & Mint (deep cond.)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#4a6a8a"></div>Kinky-Curly Knot Today (leave-in)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#8a6a4a"></div>Aunt Jackie's Curl La La (cream)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#7a7a3a"></div>Argan oil</div>
+        <div class="product-tag"><div class="product-dot" style="background:#3a7a8a"></div>DIY spray bottle (water + leave-in)</div>
+      </div>
+    </div>
+
+    <div class="hair-tabs">
+      <button class="hair-tab active" onclick="showHairDay('h-sunday', this)">Sun</button>
+      <button class="hair-tab" onclick="showHairDay('h-monday', this)">Mon</button>
+      <button class="hair-tab" onclick="showHairDay('h-tuesday', this)">Tue</button>
+      <button class="hair-tab" onclick="showHairDay('h-wednesday', this)">Wed</button>
+      <button class="hair-tab" onclick="showHairDay('h-thursday', this)">Thu</button>
+      <button class="hair-tab" onclick="showHairDay('h-friday', this)">Fri</button>
+      <button class="hair-tab" onclick="showHairDay('h-saturday', this)">Sat</button>
+    </div>
+
+    <!-- SUNDAY HAIR -->
+    <div class="hair-day active" id="h-sunday">
+      <div class="day-header">
+        <div class="day-title">Sunday<br>Wash Day</div>
+        <div class="day-badge badge-wash">🧴 Full Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Wash</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-shampoo"></div>
+          <div class="step-body">
+            <div class="step-title">Shampoo <span class="step-product p-shampoo">Design Essentials A&A</span></div>
+            <div class="step-desc">Wet your hair thoroughly with warm water first. Apply shampoo to your scalp — not the length of your hair. Massage with your fingertips in circular motions for 2-3 minutes. The lather will clean the lengths as it rinses through. Rinse well with warm water.</div>
+            <div class="step-tip">⚡ Use Kinky-Curly Come Clean instead on the 1st Sunday of each month to fully reset buildup.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-deep"></div>
+          <div class="step-body">
+            <div class="step-title">Deep condition + Detangle <span class="step-product p-deep">Mielle Babassu & Mint</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Apply deep conditioner generously from roots to ends on soaking wet hair. Then while it's still in, divide into 4 sections and detangle with your wide-tooth comb working from ends to roots — this is when you have maximum slip. Once detangled, put on your shower cap and wrap a warm wet towel around your head. Leave for 10-15 minutes. Rinse with cool water.</div>
+            <div class="step-tip">🔥 The warm towel forces your cuticles open so the conditioner actually penetrates. Don't skip this for low porosity hair.</div>
+          </div>
+        </div>
+        <div class="phase-label">Styling (on soaking wet hair — don't towel dry first)</div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair is already detangled. Now use your paddle brush section by section — place at root, drag to ends in one smooth stroke. This is what creates bigger curl clumps.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Apply leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">Hair should still be dripping wet. Apply a generous amount section by section, scrunching upward. Don't rake — scrunch. This encourages curl clumping. Make sure every strand is coated.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Apply curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Apply on top of your leave-in while hair is still very wet. Small amount — emulsify between palms, scrunch into each section upward. Work in sections for even coverage.</div>
+            <div class="step-tip">💡 Less is more with low porosity hair. Start small and add if needed — never the other way around.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal with oil <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops only. Rub between palms and lightly scrunch over your hair. This seals all the moisture in.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Scrunch + Air dry — hands off 🚫</div>
+            <div class="step-desc">Scrunch out excess dripping water with a microfiber towel or old soft t-shirt — scrunch upward a few times and stop, don't rub. Then leave your hair completely alone until fully dry. Every touch breaks curl clumps and creates frizz.</div>
+            <div class="step-tip">✋ No touching. Not even to check. Wait until completely dry before putting your bonnet on.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night</div>
+        <div class="step">
+          <div class="step-num">8</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Put on satin bonnet 🎀</div>
+            <div class="step-desc">Only once fully dry. Every single night — protects your curl pattern, prevents friction damage, keeps moisture in.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONDAY HAIR -->
+    <div class="hair-day" id="h-monday">
+      <div class="day-header">
+        <div class="day-title">Monday<br>Co-Wash Day</div>
+        <div class="day-badge badge-cowash">🌿 Co-Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Wash</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-cowash"></div>
+          <div class="step-body">
+            <div class="step-title">Co-wash + Detangle <span class="step-product p-cowash">As I Am CoWash</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Wet hair with warm water. Apply co-wash to scalp and lengths and massage thoroughly for 2-3 minutes. While it's still in, divide into sections and detangle with your wide-tooth comb from ends to roots — the co-wash gives you slip. Then rinse well.</div>
+          </div>
+        </div>
+        <div class="phase-label">Styling (on soaking wet hair)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair is already detangled. Use the paddle brush section by section from root to ends to clump your curls together.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Apply leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">On soaking wet hair. Scrunch upward section by section. Don't skimp — this is your main moisture layer today.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Apply curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Small amount, scrunched in upward.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops, scrunched lightly. Scrunch out excess water with microfiber towel, then air dry without touching.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night</div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet 🎀</div>
+            <div class="step-desc">Every night, no exceptions. Only once fully dry.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TUESDAY HAIR -->
+    <div class="hair-day" id="h-tuesday">
+      <div class="day-header">
+        <div class="day-title">Tuesday<br>Refresh Day</div>
+        <div class="day-badge badge-spritz">💧 Spritz Only</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning refresh (5 minutes)</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Spritz hair <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Lightly mist your hair all over with your water + leave-in mixture. Not soaking wet — just damp enough to reactivate the curl pattern. Scrunch upward gently with your hands.</div>
+            <div class="step-tip">💡 Spray bottle = mostly water + a small squeeze of Knot Today. Mix once, use all week.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Tiny bit of curl cream if needed <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Only if curls look flat or frizzy. Less than a pea-size, scrunched into the areas that need it only.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Leave it alone</div>
+            <div class="step-desc">You're home today. Let it air dry. Don't touch it while it dries.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night</div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-none"></div>
+          <div class="step-body"><div class="step-title">Satin bonnet 🎀</div><div class="step-desc">Every night.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY HAIR -->
+    <div class="hair-day" id="h-wednesday">
+      <div class="day-header">
+        <div class="day-title">Wednesday<br>Refresh + Night Wash</div>
+        <div class="day-badge badge-cowash">🌿 Day Spritz / Night Co-Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning (same as Tuesday)</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Morning spritz <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light mist, scrunch, leave alone.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night — co-wash so hair is ready for Thursday (leave at 6:30am)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-cowash"></div>
+          <div class="step-body">
+            <div class="step-title">Co-wash + Detangle <span class="step-product p-cowash">As I Am CoWash</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Wet hair with warm water. Apply co-wash, massage scalp thoroughly. While it's still in, detangle section by section with wide-tooth comb from ends to roots. Then rinse well.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair already detangled. Paddle brush section by section from root to ends.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">Scrunch into soaking wet hair section by section.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Small amount scrunched in. Your hair will dry overnight — perfectly defined by morning.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops, scrunched in. Scrunch out excess water with microfiber towel. Air dry fully before sleeping.</div>
+            <div class="step-tip">⏰ Do this early enough that hair is dry before you sleep — wet hair under a bonnet causes damage.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet once dry 🎀</div>
+            <div class="step-desc">Once fully dry, put the bonnet on. Wake up Thursday with your curls already done.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THURSDAY HAIR -->
+    <div class="hair-day" id="h-thursday">
+      <div class="day-header">
+        <div class="day-title">Thursday<br>Morning Refresh + Night Wash</div>
+        <div class="day-badge badge-cowash">🌿 Morning Spritz / Night Co-Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning — hair already done from Wednesday night</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Quick morning refresh <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light spritz and scrunch if needed. Curls should already look great from last night. Takes 2 minutes — you're leaving at 6:30.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night — co-wash so hair is ready for Friday (also leaving at 6:30am)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-cowash"></div>
+          <div class="step-body">
+            <div class="step-title">Co-wash + Detangle <span class="step-product p-cowash">As I Am CoWash</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Wet hair with warm water. Apply co-wash, massage scalp thoroughly. While it's still in, detangle section by section from ends to roots. Then rinse well.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair already detangled. Paddle brush section by section from root to ends.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">Scrunched into soaking wet hair.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Small amount scrunched in. Dry overnight.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops. Scrunch out excess water with microfiber towel. Air dry fully before bonnet.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet once dry 🎀</div>
+            <div class="step-desc">Wake up Friday with your curls already set.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRIDAY HAIR -->
+    <div class="hair-day" id="h-friday">
+      <div class="day-header">
+        <div class="day-title">Friday<br>Morning Refresh</div>
+        <div class="day-badge badge-spritz">💧 Spritz Only</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning — hair already done from Thursday night</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Quick morning refresh <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light spritz and scrunch. Curls already defined from last night. You're leaving at 6:30 — this takes 2 minutes.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night (at mom's)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet 🎀</div>
+            <div class="step-desc">Bring your bonnet to your mom's. Don't skip it just because you're not home.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SATURDAY HAIR -->
+    <div class="hair-day" id="h-saturday">
+      <div class="day-header">
+        <div class="day-title">Saturday<br>Light Refresh</div>
+        <div class="day-badge badge-spritz">💧 Spritz Only</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Spritz and scrunch <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light mist, scrunch upward, leave alone. Sunday wash day is tomorrow — no need to do much today.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-none"></div>
+          <div class="step-body"><div class="step-title">Satin bonnet 🎀</div><div class="step-desc">At mom's — bring your bonnet.</div></div>
+        </div>
+        <div class="tips-box">
+          <div class="tips-box-title">💼 What to pack when going to mom's</div>
+          <div class="tip-item"><span>•</span>Spray bottle (or travel-size leave-in + small bottle)</div>
+          <div class="tip-item"><span>•</span>Satin bonnet</div>
+          <div class="tip-item"><span>•</span>Small amount of curl cream in a travel container</div>
+          <div class="tip-item"><span>•</span>That's it — you don't need to bring everything</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hair Golden Rules -->
+    <div class="hair-rules">
+      <div class="hair-rules-title">The Golden Rules</div>
+      <div class="hair-rule"><div class="hair-rule-icon">🔥</div><div class="hair-rule-text"><strong>Heat on deep condition day, always.</strong> Warm towel over shower cap for 10-15 min every Sunday. Without this, products just sit on top of your low porosity hair and do nothing.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">✋</div><div class="hair-rule-text"><strong>Don't touch your hair while it's drying.</strong> Every touch breaks curl clumps and creates frizz. This is the #1 cause of frizzy afros.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">💧</div><div class="hair-rule-text"><strong>Always style on soaking wet hair.</strong> Not damp — soaking. If your hair isn't dripping when you apply products, add more water first.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">⬆️</div><div class="hair-rule-text"><strong>Scrunch upward, never rake downward.</strong> Raking separates curls into individual strands = frizz. Scrunching groups them into clumps = big curls.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">📉</div><div class="hair-rule-text"><strong>Less product than you think.</strong> Low porosity hair builds up fast. Start small and add more if needed — never the other way around.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">🎀</div><div class="hair-rule-text"><strong>Bonnet every single night — only when fully dry.</strong> Including at mom's. Cotton destroys your curl pattern overnight.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">🔄</div><div class="hair-rule-text"><strong>Clarify once a month.</strong> First Sunday — use Kinky-Curly Come Clean instead of Design Essentials. Resets buildup so your hair can absorb moisture again.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">⏳</div><div class="hair-rule-text"><strong>Give it 4-6 weeks.</strong> Your hair needs time to adjust. It won't be perfect week one — stick with it.</div></div>
+    </div>
+
+  </div><!-- end section-hair -->
+
+  <!-- ======================================================
+       SKIN CARE SECTION
+       ====================================================== -->
+  <div class="section" id="section-skin">
+
+    <div class="skin-header">
+      <div class="skin-tag">// skin care system</div>
+      <h1 class="skin-h1">CLEAR<br><em>SKIN</em></h1>
+      <div class="skin-subtitle">Normal/combination · Mild T-zone flakiness · Mild acne · Dry lips<br>4 products. Morning + evening. That's it.</div>
+    </div>
+
+    <div class="skin-products-bar">
+      <div class="skin-products-bar-title">Your Products</div>
+      <div class="skin-products-grid">
+        <div class="skin-product-row"><span class="product-pill pill-cleanser">Cleanser</span>CeraVe Hydrating Facial Cleanser — ~$18</div>
+        <div class="skin-product-row"><span class="product-pill pill-moisturizer">Moisturizer</span>CeraVe PM Facial Moisturizing Lotion — ~$22</div>
+        <div class="skin-product-row"><span class="product-pill pill-exfoliant">Exfoliant</span>The Ordinary Salicylic Acid 2% Solution — ~$10</div>
+        <div class="skin-product-row"><span class="product-pill pill-lips">Lips</span>Aquaphor Lip Repair — ~$10</div>
+      </div>
+    </div>
+
+    <div class="skin-day-tabs">
+      <button class="skin-day-tab" id="sk-sun" onclick="showSkinDay('sun', this)">Sun</button>
+      <button class="skin-day-tab" id="sk-mon" onclick="showSkinDay('mon', this)">Mon</button>
+      <button class="skin-day-tab" id="sk-tue" onclick="showSkinDay('tue', this)">Tue</button>
+      <button class="skin-day-tab" id="sk-wed" onclick="showSkinDay('wed', this)">Wed</button>
+      <button class="skin-day-tab" id="sk-thu" onclick="showSkinDay('thu', this)">Thu</button>
+      <button class="skin-day-tab" id="sk-fri" onclick="showSkinDay('fri', this)">Fri</button>
+      <button class="skin-day-tab" id="sk-sat" onclick="showSkinDay('sat', this)">Sat</button>
+    </div>
+
+    <div id="skin-day-views"></div>
+
+    <div class="skin-rules">
+      <div class="skin-rules-title">The Rules</div>
+      <div class="skin-rule"><div class="skin-rule-icon">🔄</div><div class="skin-rule-text"><strong>Consistency over perfection.</strong> A basic routine done every day beats a perfect routine done sometimes. Even just washing and moisturizing counts.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">⚠️</div><div class="skin-rule-text"><strong>Salicylic acid = evening only, T-zone only.</strong> Never all over your face, never in the morning. More is not better.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">🚫</div><div class="skin-rule-text"><strong>Stop licking your lips.</strong> Every lick makes them drier. When you feel the urge, apply Aquaphor instead.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">🤲</div><div class="skin-rule-text"><strong>Don't touch your face.</strong> Hands transfer oil and bacteria directly to your pores — #1 cause of new pimples.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">💧</div><div class="skin-rule-text"><strong>Lukewarm water only.</strong> Hot water strips your skin's natural oils. Cold doesn't cleanse well. Lukewarm is the sweet spot.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">⏳</div><div class="skin-rule-text"><strong>Give it 4-6 weeks.</strong> Skin cell turnover takes ~4 weeks. T-zone flaking, mild acne, and lip dryness should all be noticeably better by then.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">✈️</div><div class="skin-rule-text"><strong>Traveling?</strong> Bring cleanser, moisturizer and Aquaphor. Leave salicylic acid at home. A simplified routine for a week is completely fine.</div></div>
+    </div>
+
+  </div><!-- end section-skin -->
+
+</div><!-- end app-container -->
+
+<script>
+// ── Section nav ──────────────────────────────────────────────
+const accentMap = { schedule: 'nav-sched', hair: 'nav-hair', skin: 'nav-skin' };
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  const acc = document.getElementById('nav-accent');
+  acc.className = 'top-nav-accent ' + accentMap[name];
+  document.getElementById('top-nav-select').value = name;
+  if (name === 'skin' && !document.getElementById('skin-day-views').innerHTML) {
+    showSkinDay('sun', document.getElementById('sk-sun'));
+  }
+}
+
+// ── Schedule days ─────────────────────────────────────────────
+function showSchedDay(day, btn) {
+  document.querySelectorAll('.sched-day').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sched-' + day).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Hair care days ────────────────────────────────────────────
+function showHairDay(day, btn) {
+  document.querySelectorAll('.hair-day').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.hair-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(day).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Skin care days ────────────────────────────────────────────
+const skinDays = {
+  sun: { label: 'Sunday',    salicylic: true,  note: 'Hair wash day — do skincare after the hair routine.' },
+  mon: { label: 'Monday',    salicylic: false, note: 'School day — do your evening routine before wind down.' },
+  tue: { label: 'Tuesday',   salicylic: true,  note: 'Home day — plenty of time, no rush.' },
+  wed: { label: 'Wednesday', salicylic: false, note: 'Hair co-wash night — do skincare after the hair routine.' },
+  thu: { label: 'Thursday',  salicylic: true,  note: 'Hair co-wash night — do skincare after the hair routine.' },
+  fri: { label: 'Friday',    salicylic: false, note: "At mom's — bring cleanser, moisturizer and Aquaphor. Leave salicylic acid at home." },
+  sat: { label: 'Saturday',  salicylic: false, note: "At mom's — same as Friday. Simple routine only." },
+};
+
+function skinMorning() {
+  return `
+    <div class="skin-routine-label">Morning — after waking up, takes 2 minutes</div>
+    <div class="skin-step">
+      <div class="skin-step-num">1</div><div class="skin-step-bar bar-cleanser"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Wash your face <span class="product-pill pill-cleanser">Cleanser</span></div>
+        <div class="skin-step-desc">Wet your face with lukewarm water. Apply a small amount of CeraVe Hydrating Facial Cleanser and massage gently in circular motions for 30-60 seconds. Rinse thoroughly and pat dry — never rub.</div>
+        <div class="skin-step-tip info">💡 Pat dry, never rub. Rubbing irritates skin and triggers breakouts.</div>
+      </div>
+    </div>
+    <div class="skin-step">
+      <div class="skin-step-num">2</div><div class="skin-step-bar bar-moisturizer"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Moisturize <span class="product-pill pill-moisturizer">Moisturizer</span></div>
+        <div class="skin-step-desc">Apply CeraVe PM Facial Moisturizing Lotion while your face is still slightly damp. Dot on forehead, cheeks, nose and chin, spread evenly with gentle upward motions. A pea-sized amount per area is enough.</div>
+        <div class="skin-step-tip">✨ Niacinamide in this moisturizer reduces inflammation and pore size over time — helps both T-zone flakiness and mild acne.</div>
+      </div>
+    </div>
+    <div class="skin-step">
+      <div class="skin-step-num">3</div><div class="skin-step-bar bar-lips"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Lip balm <span class="product-pill pill-lips">Lips</span></div>
+        <div class="skin-step-desc">Apply Aquaphor Lip Repair to your lips and slightly beyond the lip line. Don't lick it off.</div>
+        <div class="skin-step-tip warning">⚠️ Stop licking your lips. Every lick makes them drier. Apply Aquaphor instead.</div>
+      </div>
+    </div>`;
+}
+
+function skinEvening(salicylic, note) {
+  const salStep = salicylic ? `
+    <div class="skin-step">
+      <div class="skin-step-num">2</div><div class="skin-step-bar bar-exfoliant"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Salicylic acid — T-zone only <span class="product-pill pill-exfoliant">Exfoliant</span> <span class="freq-badge freq-weekly">Tonight only</span></div>
+        <div class="skin-step-desc">On cleansed, dry skin. Apply The Ordinary Salicylic Acid 2% using a cotton pad or fingertip — only on flaky areas: between eyebrows, sides of nose, chin if needed. Do not apply all over. Wait 1-2 minutes before moisturizing.</div>
+        <div class="skin-step-tip warning">⚠️ T-zone only. Evening only. Never in the morning.</div>
+      </div>
+    </div>` : '';
+
+  const mNum = salicylic ? 3 : 2;
+  const lNum = salicylic ? 4 : 3;
+
+  return `
+    <div class="skin-routine-label">Evening — before bed · ${note}</div>
+    <div class="skin-step">
+      <div class="skin-step-num">1</div><div class="skin-step-bar bar-cleanser"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Wash your face <span class="product-pill pill-cleanser">Cleanser</span></div>
+        <div class="skin-step-desc">Same as morning — lukewarm water, CeraVe, 30-60 seconds gentle massage, rinse, pat dry. Removes the day's sweat, oil and buildup before bed.</div>
+      </div>
+    </div>
+    ${salStep}
+    <div class="skin-step">
+      <div class="skin-step-num">${mNum}</div><div class="skin-step-bar bar-moisturizer"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Moisturize <span class="product-pill pill-moisturizer">Moisturizer</span></div>
+        <div class="skin-step-desc">Same CeraVe PM lotion. Apply while face is slightly damp. Your skin repairs itself while you sleep — 7-8 hours of uninterrupted absorption makes this your most effective application of the day.</div>
+        <div class="skin-step-tip">🌙 Don't skip nighttime moisturizer even if you're tired. It takes 30 seconds.</div>
+      </div>
+    </div>
+    <div class="skin-step">
+      <div class="skin-step-num">${lNum}</div><div class="skin-step-bar bar-lips"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Lip balm <span class="product-pill pill-lips">Lips</span></div>
+        <div class="skin-step-desc">Apply a generous layer of Aquaphor to lips and around them. 8 hours overnight will make a visible difference within a week.</div>
+        <div class="skin-step-tip">💤 More is fine at night. Build up a thick layer and let it work while you sleep.</div>
+      </div>
+    </div>`;
+}
+
+function showSkinDay(key, btn) {
+  const d = skinDays[key];
+  const isSal = d.salicylic;
+  const badgeStyle = isSal
+    ? 'color:#f5a623;background:#f5a62322;border:1px solid #f5a62344;'
+    : 'color:#3dd9b3;background:#3dd9b322;border:1px solid #3dd9b344;';
+  const badgeText = isSal ? '🧴 Salicylic Acid Night' : '✨ Regular Night';
+
+  document.getElementById('skin-day-views').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#eef2f7;">${d.label}</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:100px;white-space:nowrap;flex-shrink:0;font-family:'Nunito',sans-serif;${badgeStyle}">${badgeText}</div>
+    </div>
+    <div class="skin-steps">${skinMorning()}</div>
+    <div class="skin-steps" style="margin-top:6px;">${skinEvening(isSal, d.note)}</div>`;
+
+  document.querySelectorAll('.skin-day-tab').forEach(t => t.classList.remove('active-regular', 'active-sal'));
+  btn.classList.add(isSal ? 'active-sal' : 'active-regular');
+}
+
+// Init
+showSkinDay('sun', document.getElementById('sk-sun'));
+</script>
+</body>
+</html>
