@@ -1,0 +1,4406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700&family=Syne:wght@400;700;800&family=Nunito:wght@300;400;600;700&family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Literata:ital,wght@0,300;0,400;1,300;1,400&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,600;0,900;1,900&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   GLOBAL BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  background: #0a0a0f;
+  color: #f0f0f0;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.app-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   TOP NAV — dropdown
+   ============================================================ */
+.top-nav {
+  position: relative;
+  margin-bottom: 36px;
+  animation: fadeDown 0.5s ease both;
+  z-index: 100;
+}
+
+.top-nav-select {
+  width: 100%;
+  background: #12121a;
+  border: 1px solid #2a2a3d;
+  border-radius: 10px;
+  padding: 14px 44px 14px 16px;
+  color: #f0f0f0;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.top-nav-select:hover { border-color: #444460; }
+.top-nav-select:focus { border-color: #666680; }
+
+.top-nav-arrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666680;
+  font-size: 12px;
+}
+
+/* active accent line under the nav */
+.top-nav-accent {
+  height: 2px;
+  border-radius: 2px;
+  margin-top: 4px;
+  transition: background 0.3s;
+}
+.nav-sched  { background: #e8ff47; }
+.nav-hair   { background: #d4814a; }
+.nav-skin    { background: #3dd9b3; }
+.nav-workout { background: #ff3d3d; }
+.nav-budget     { background: #00e5a0; }
+.nav-nutrition  { background: #a8e060; }
+
+/* ============================================================
+   SECTION VISIBILITY
+   ============================================================ */
+.section { display: none; }
+.section.active { display: block; animation: fadeUp 0.3s ease both; }
+
+/* ============================================================
+   SCHEDULE SECTION
+   ============================================================ */
+.sched-header { margin-bottom: 32px; animation: fadeDown 0.6s ease both; }
+
+.sched-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #e8ff47;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.sched-h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 12vw, 76px);
+  line-height: 0.9;
+  color: #f0f0f0;
+  letter-spacing: 2px;
+}
+
+.sched-h1 span { color: #e8ff47; }
+
+.sched-subtitle {
+  font-size: 13px;
+  color: #666680;
+  margin-top: 10px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* Legend */
+.sched-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #666680;
+  font-family: 'DM Mono', monospace;
+}
+
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* Day tabs */
+.day-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.day-tab {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: 1px solid #2a2a3d;
+  background: #12121a;
+  color: #666680;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.day-tab:hover { border-color: #e8ff47; color: #e8ff47; }
+.day-tab.active { background: #e8ff47; color: #0a0a0f; border-color: #e8ff47; }
+.day-tab.school-day { border-color: #ff6b9d44; }
+.day-tab.school-day.active { background: #ff6b9d; border-color: #ff6b9d; color: #0a0a0f; }
+.day-tab.weekend-day { border-color: #b47fff44; }
+.day-tab.weekend-day.active { background: #b47fff; border-color: #b47fff; color: #0a0a0f; }
+
+/* Day views */
+.sched-day { display: none; animation: fadeUp 0.3s ease both; }
+.sched-day.active { display: block; }
+
+.day-type-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.badge-school { background: #ff6b9d22; color: #ff6b9d; border: 1px solid #ff6b9d44; }
+.badge-home   { background: #47c8ff22; color: #47c8ff; border: 1px solid #47c8ff44; }
+.badge-weekend { background: #b47fff22; color: #b47fff; border: 1px solid #b47fff44; }
+
+.schedule { display: flex; flex-direction: column; gap: 3px; }
+
+.block {
+  display: flex;
+  align-items: stretch;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #2a2a3d;
+  background: #1a1a26;
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: slideIn 0.3s ease both;
+}
+
+.block:hover { transform: translateX(3px); box-shadow: -3px 0 0 #e8ff47; }
+
+.block-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: #666680;
+  padding: 12px 14px;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  background: #12121a;
+  border-right: 1px solid #2a2a3d;
+  white-space: nowrap;
+}
+
+.block-accent { width: 3px; flex-shrink: 0; }
+.block-content { padding: 10px 14px; flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.block-title { font-size: 13px; font-weight: 500; line-height: 1.3; }
+.block-detail { font-size: 11px; color: #666680; margin-top: 2px; font-family: 'DM Mono', monospace; }
+.block-icon { font-size: 18px; flex-shrink: 0; }
+
+.b-wake    { border-color: #e8ff4744; } .b-wake .block-accent    { background: #e8ff47; }
+.b-workout { border-color: #e8ff4744; } .b-workout .block-accent { background: #e8ff47; }
+.b-japanese{ border-color: #47c8ff44; } .b-japanese .block-accent{ background: #47c8ff; }
+.b-book    { border-color: #b47fff44; } .b-book .block-accent    { background: #b47fff; }
+.b-study   { border-color: #ff6b6b44; } .b-study .block-accent   { background: #ff6b6b; }
+.b-transit { border-color: #ff9d4744; } .b-transit .block-accent { background: #ff9d47; }
+.b-school  { border-color: #ff6b9d44; } .b-school .block-accent  { background: #ff6b9d; }
+.b-meal    { border-color: #ffffff22; } .b-meal .block-accent    { background: #ffffff44; }
+.b-free    { border-color: #ffffff11; } .b-free .block-accent    { background: #333; }
+.b-sleep   { border-color: #6666ff33; } .b-sleep .block-accent   { background: #6666ff; }
+.b-shower  { border-color: #47ffda44; } .b-shower .block-accent  { background: #47ffda; }
+
+/* Schedule rules */
+.sched-rules {
+  margin-top: 32px;
+  border: 1px solid #2a2a3d;
+  border-radius: 8px;
+  padding: 20px;
+  background: #12121a;
+}
+
+.sched-rules-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: #e8ff47;
+  margin-bottom: 14px;
+  letter-spacing: 1px;
+}
+
+.sched-rule {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a2a3d;
+  font-size: 13px;
+}
+
+.sched-rule:last-child { border-bottom: none; }
+.sched-rule-num { font-family: 'DM Mono', monospace; font-size: 11px; color: #e8ff47; min-width: 24px; padding-top: 1px; }
+.sched-rule-text { color: #f0f0f0; line-height: 1.5; }
+.sched-rule-text strong { color: #47c8ff; }
+
+/* ============================================================
+   HAIR CARE SECTION — warm dark theme
+   ============================================================ */
+.hair-section {
+  background: transparent;
+}
+
+/* Warm dark overlay feel via a pseudo on the section */
+.hair-section .hair-inner {
+  position: relative;
+}
+
+.hair-header { margin-bottom: 36px; }
+
+.hair-tag {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  color: #d4814a;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.hair-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(38px, 10vw, 60px);
+  line-height: 1;
+  color: #f0ece8;
+  font-weight: 900;
+}
+
+.hair-h1 em { color: #d4814a; font-style: italic; }
+
+.hair-subtitle {
+  font-size: 13px;
+  color: #7a6a5a;
+  margin-top: 12px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Products bar */
+.products-bar {
+  background: #16120e;
+  border: 1px solid #3a2e24;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 28px;
+}
+
+.products-bar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #f0ece8;
+}
+
+.products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+.product-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #7a6a5a;
+  font-family: 'Lato', sans-serif;
+}
+
+.product-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Hair day tabs */
+.hair-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.hair-tab {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1.5px solid #3a2e24;
+  background: #16120e;
+  color: #7a6a5a;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hair-tab:hover { border-color: #d4814a; color: #d4814a; }
+.hair-tab.active { background: #d4814a; color: #0a0a0f; border-color: #d4814a; }
+
+/* Hair day views */
+.hair-day { display: none; animation: fadeUp 0.3s ease both; }
+.hair-day.active { display: block; }
+
+.day-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.day-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #f0ece8;
+  line-height: 1.1;
+}
+
+.day-badge {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 4px;
+  font-family: 'Lato', sans-serif;
+}
+
+.badge-wash   { background: #d4814a22; color: #d4814a; border: 1px solid #d4814a44; }
+.badge-cowash { background: #4a8a5a22; color: #6aaa7a; border: 1px solid #4a8a5a44; }
+.badge-spritz { background: #7a5c8a22; color: #aa8aba; border: 1px solid #7a5c8a44; }
+
+.steps { display: flex; flex-direction: column; gap: 2px; }
+
+.phase-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #5a4a3a;
+  padding: 16px 0 8px;
+}
+
+.phase-label:first-child { padding-top: 0; }
+
+.step {
+  display: flex;
+  background: #16120e;
+  border: 1px solid #3a2e24;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: slideIn 0.3s ease both;
+  transition: box-shadow 0.2s;
+  margin-bottom: 4px;
+}
+
+.step:hover { box-shadow: 0 4px 16px rgba(212,129,74,0.12); }
+
+.step-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #3a2e24;
+  padding: 16px 14px;
+  min-width: 50px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #120e0a;
+  border-right: 1px solid #3a2e24;
+  line-height: 1;
+  padding-top: 18px;
+}
+
+.step-bar { width: 3px; flex-shrink: 0; }
+.step-body { padding: 14px 16px; flex: 1; }
+
+.step-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #f0ece8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: 'Lato', sans-serif;
+}
+
+.step-product {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: 'Lato', sans-serif;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: #7a6a5a;
+  line-height: 1.6;
+  font-weight: 300;
+  font-family: 'Lato', sans-serif;
+}
+
+.step-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #d4814a;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+  font-family: 'Lato', sans-serif;
+}
+
+/* Step bar colors */
+.bar-shampoo { background: #c8883a; }
+.bar-deep    { background: #8a5c9a; }
+.bar-cowash  { background: #4a8a5a; }
+.bar-leavein { background: #4a6a8a; }
+.bar-cream   { background: #8a6a4a; }
+.bar-oil     { background: #7a7a3a; }
+.bar-water   { background: #3a7a8a; }
+.bar-tool    { background: #6a6a8a; }
+.bar-none    { background: #3a2e24; }
+
+/* Step product pill colors */
+.p-shampoo { background: #c8883a22; color: #c8883a; }
+.p-deep    { background: #8a5c9a22; color: #aa7aba; }
+.p-cowash  { background: #4a8a5a22; color: #6aaa7a; }
+.p-leavein { background: #4a6a8a22; color: #6a8aaa; }
+.p-cream   { background: #8a6a4a22; color: #aa8a6a; }
+.p-oil     { background: #7a7a3a22; color: #9a9a5a; }
+.p-water   { background: #3a7a8a22; color: #5a9aaa; }
+.p-tool    { background: #6a6a8a22; color: #8a8aaa; }
+
+/* Tips box */
+.tips-box {
+  background: #120e0a;
+  border: 1px solid #3a2e24;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.tips-box-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d4814a;
+  margin-bottom: 10px;
+  font-family: 'Lato', sans-serif;
+}
+
+.tip-item {
+  font-size: 12px;
+  color: #7a6a5a;
+  line-height: 1.6;
+  padding: 4px 0;
+  border-bottom: 1px solid #3a2e24;
+  display: flex;
+  gap: 8px;
+  font-family: 'Lato', sans-serif;
+}
+
+.tip-item:last-child { border-bottom: none; }
+
+/* Hair rules */
+.hair-rules {
+  margin-top: 32px;
+  background: #120e0a;
+  border: 1px solid #3a2e24;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.hair-rules-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: #d4814a;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.hair-rule {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #2a1e14;
+  font-size: 13px;
+}
+
+.hair-rule:last-child { border-bottom: none; }
+.hair-rule-icon { flex-shrink: 0; font-size: 16px; }
+.hair-rule-text { color: #7a6a5a; line-height: 1.5; font-weight: 300; font-family: 'Lato', sans-serif; }
+.hair-rule-text strong { color: #f0ece8; font-weight: 700; }
+
+/* ============================================================
+   SHARED ANIMATIONS
+   ============================================================ */
+@keyframes fadeDown { from { opacity:0; transform: translateY(-14px); } to { opacity:1; transform: none; } }
+@keyframes fadeUp   { from { opacity:0; transform: translateY(10px);  } to { opacity:1; transform: none; } }
+@keyframes slideIn  { from { opacity:0; transform: translateX(-6px);  } to { opacity:1; transform: none; } }
+
+/* ============================================================
+   SKIN CARE SECTION
+   ============================================================ */
+.skin-header { margin-bottom: 32px; }
+
+.skin-tag {
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  color: #3dd9b3;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.skin-h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(44px, 11vw, 68px);
+  line-height: 0.95;
+  font-weight: 800;
+  color: #eef2f7;
+  letter-spacing: -1px;
+}
+
+.skin-h1 em { color: #3dd9b3; font-style: normal; }
+
+.skin-subtitle {
+  font-size: 13px;
+  color: #4a6070;
+  margin-top: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-products-bar {
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.skin-products-bar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #eef2f7;
+}
+
+.skin-products-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.skin-product-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #4a6070;
+  font-family: 'Nunito', sans-serif;
+}
+
+.product-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+.pill-cleanser   { background: #5b9cf622; color: #5b9cf6; border: 1px solid #5b9cf644; }
+.pill-moisturizer{ background: #3dd9b322; color: #3dd9b3; border: 1px solid #3dd9b344; }
+.pill-exfoliant  { background: #f5a62322; color: #f5a623; border: 1px solid #f5a62344; }
+.pill-lips       { background: #f56e6e22; color: #f56e6e; border: 1px solid #f56e6e44; }
+
+.skin-day-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.skin-day-tab {
+  flex: 1;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 9px 4px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: #4a6070;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.skin-day-tab:hover { color: #eef2f7; }
+.skin-day-tab.active-regular { background: #5b9cf6; color: #080b0f; }
+.skin-day-tab.active-sal     { background: #2a1f0e; color: #f5a623; border: 1px solid #f5a62344; }
+
+.skin-routine-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #2a3a48;
+  padding: 14px 0 8px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-routine-label:first-child { padding-top: 0; }
+
+.skin-steps { display: flex; flex-direction: column; gap: 3px; }
+
+.skin-step {
+  display: flex;
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.15s;
+  margin-bottom: 3px;
+}
+
+.skin-step:hover { box-shadow: 0 0 0 1px #3dd9b3; transform: translateX(2px); }
+
+.skin-step-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e2830;
+  padding: 16px 14px;
+  min-width: 48px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #0a0e12;
+  border-right: 1px solid #1e2830;
+  padding-top: 18px;
+  line-height: 1;
+}
+
+.skin-step-bar { width: 3px; flex-shrink: 0; }
+.skin-step-body { padding: 14px 16px; flex: 1; }
+
+.skin-step-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #eef2f7;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.freq-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.freq-weekly { background: #f5a62322; color: #f5a623; border: 1px solid #f5a62344; }
+
+.skin-step-desc {
+  font-size: 13px;
+  color: #4a6070;
+  line-height: 1.65;
+  font-weight: 400;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-step-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #3dd9b3;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.5;
+  font-family: 'Nunito', sans-serif;
+}
+
+.skin-step-tip.warning { color: #f5a623; }
+.skin-step-tip.info    { color: #5b9cf6; }
+
+.bar-cleanser    { background: #5b9cf6; }
+.bar-moisturizer { background: #3dd9b3; }
+.bar-exfoliant   { background: #f5a623; }
+.bar-lips        { background: #f56e6e; }
+
+.skin-rules {
+  margin-top: 28px;
+  background: #0e1318;
+  border: 1px solid #1e2830;
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.skin-rules-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #3dd9b3;
+  margin-bottom: 16px;
+}
+
+.skin-rule {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #1e2830;
+  font-size: 13px;
+}
+
+.skin-rule:last-child { border-bottom: none; }
+.skin-rule-icon { flex-shrink: 0; font-size: 16px; }
+.skin-rule-text { color: #4a6070; line-height: 1.6; font-family: 'Nunito', sans-serif; }
+.skin-rule-text strong { color: #eef2f7; font-weight: 700; }
+
+
+/* WORKOUT */
+
+  .section-workout {
+
+    --wo-bg: #080808;
+    --wo-surface: #111111;
+    --wo-card: #181818;
+    --wo-border: #252525;
+    --wo-accent: #ff3d3d;
+    --wo-accent2: #ff8c3d;
+    --wo-accent3: #3daaff;
+    --wo-accent4: #3dff8c;
+    --wo-text: #f5f5f5;
+    --wo-muted: #555;
+    --wo-muted2: #333;
+  }
+.section-workout /* diagonal stripe texture */
+  
+
+  .container {
+ max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+.section-workout /* Header */
+  header {
+ margin-bottom: 32px; animation: fadeDown 0.5s ease both; }
+.section-workout .header-tag {
+
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    color: var(--wo-accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+.section-workout h1 {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(56px, 14vw, 88px);
+    line-height: 0.88;
+    font-weight: 900;
+    color: var(--wo-text);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+.section-workout h1 span {
+ color: var(--wo-accent); }
+.section-workout .subtitle {
+
+    font-size: 13px;
+    color: var(--wo-muted);
+    margin-top: 10px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+.section-workout /* Stats strip */
+  .stats {
+
+    display: flex;
+    gap: 2px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+.section-workout .stat {
+
+    flex: 1;
+    background: var(--wo-surface);
+    border: 1px solid var(--wo-border);
+    padding: 12px 10px;
+    text-align: center;
+    border-radius: 4px;
+  }
+.section-workout .stat-val {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--wo-accent);
+    line-height: 1;
+  }
+.section-workout .stat-label {
+
+    font-size: 10px;
+    color: var(--wo-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 3px;
+    font-weight: 500;
+  }
+.section-workout /* Equipment */
+  .equip-bar {
+
+    background: var(--wo-surface);
+    border: 1px solid var(--wo-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.5s 0.15s ease both;
+  }
+.section-workout .equip-label {
+
+    font-size: 10px;
+    color: var(--wo-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+.section-workout .equip-tag {
+
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: var(--wo-card);
+    border: 1px solid var(--wo-border);
+    color: var(--wo-text);
+  }
+.section-workout /* Day tabs */
+  .day-tabs {
+
+    display: flex;
+    gap: 3px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+.section-workout .day-tab {
+
+    flex: 1;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 4px;
+    border: 1px solid var(--wo-border);
+    background: var(--wo-surface);
+    color: var(--wo-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+    text-align: center;
+  }
+.section-workout .day-tab:hover {
+ color: var(--wo-text); border-color: #444; }
+.section-workout .day-tab.active {
+ background: var(--wo-accent); color: #080808; border-color: var(--wo-accent); }
+.section-workout /* Day view */
+  .day-view {
+ display: none; animation: fadeUp 0.25s ease both; }
+.section-workout .day-view.active {
+ display: block; }
+.section-workout .day-header {
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+.section-workout .day-name {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--wo-text);
+    line-height: 1;
+  }
+.section-workout .day-focus {
+
+    font-size: 12px;
+    color: var(--wo-accent);
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+.section-workout .day-meta {
+
+    text-align: right;
+    flex-shrink: 0;
+  }
+.section-workout .day-time {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--wo-accent2);
+    line-height: 1;
+  }
+.section-workout .day-time-label {
+
+    font-size: 10px;
+    color: var(--wo-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+.section-workout /* Warmup/cooldown bar */
+  .phase-bar {
+
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--wo-muted);
+    padding: 12px 0 8px;
+    border-bottom: 1px solid var(--wo-muted2);
+    margin-bottom: 8px;
+  }
+.section-workout /* Exercise blocks */
+  .exercises {
+ display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
+.section-workout .ex {
+
+    display: flex;
+    background: var(--wo-card);
+    border: 1px solid var(--wo-border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+    animation: slideIn 0.3s ease both;
+  }
+.section-workout .ex:hover {
+ border-color: #444; }
+.section-workout .ex-left {
+
+    width: 4px;
+    flex-shrink: 0;
+  }
+.section-workout .ex-num {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--wo-muted2);
+    padding: 14px 12px;
+    min-width: 42px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: var(--wo-surface);
+    border-right: 1px solid var(--wo-border);
+    padding-top: 16px;
+    line-height: 1;
+  }
+.section-workout .ex-
+
+  .ex-name {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--wo-text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+.section-workout .ex-badge {
+
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-family: 'Barlow', sans-serif;
+  }
+.section-workout .badge-bw {
+ background: #3daaff22; color: #3daaff; border: 1px solid #3daaff44; }
+.section-workout .badge-db {
+ background: #ff8c3d22; color: #ff8c3d; border: 1px solid #ff8c3d44; }
+.section-workout .badge-core {
+ background: #3dff8c22; color: #3dff8c; border: 1px solid #3dff8c44; }
+.section-workout .badge-key {
+ background: #ff3d3d22; color: #ff3d3d; border: 1px solid #ff3d3d44; }
+.section-workout .ex-sets {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--wo-accent2);
+    letter-spacing: 0.3px;
+  }
+.section-workout .ex-desc {
+
+    font-size: 12px;
+    color: var(--wo-muted);
+    line-height: 1.5;
+    margin-top: 3px;
+    font-weight: 300;
+  }
+.section-workout .ex-tip {
+
+    font-size: 11px;
+    color: var(--wo-accent);
+    font-weight: 500;
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+    line-height: 1.4;
+  }
+.section-workout /* Rest badge on right */
+  .ex-rest {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 12px;
+    border-left: 1px solid var(--wo-border);
+    min-width: 52px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+.section-workout .ex-rest-val {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--wo-muted);
+    line-height: 1;
+  }
+.section-workout .ex-rest-label {
+
+    font-size: 9px;
+    color: var(--wo-muted2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+.section-workout /* superset indicator */
+  .superset-label {
+
+    font-size: 10px;
+    color: var(--wo-accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 6px 4px 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+.section-workout .superset-label::before, .section-workout .superset-label::after {
+
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--wo-accent3);
+    opacity: 0.3;
+  }
+.section-workout /* Color accents per muscle group */
+  .c-push {
+ background: #ff3d3d; }
+.section-workout .c-pull {
+ background: #3daaff; }
+.section-workout .c-legs {
+ background: #3dff8c; }
+.section-workout .c-core {
+ background: #ff8c3d; }
+.section-workout .c-cond {
+ background: #c83dff; }
+.section-workout .c-arms {
+ background: #ffdd3d; }
+.section-workout /* Rules */
+  .rules {
+
+    margin-top: 28px;
+    background: var(--wo-surface);
+    border: 1px solid var(--wo-border);
+    border-radius: 8px;
+    padding: 20px;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+.section-workout .rules-title {
+
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--wo-accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+.section-workout .rule {
+
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--wo-border);
+    font-size: 13px;
+  }
+.section-workout .rule:last-child {
+ border-bottom: none; }
+.section-workout .rule-icon {
+ flex-shrink: 0; font-size: 15px; }
+.section-workout .rule-text {
+ color: var(--wo-muted); line-height: 1.6; font-weight: 300; }
+.section-workout .rule-text strong {
+ color: var(--wo-text); font-weight: 500; }
+
+
+  @keyframes fadeDown {
+ from {
+ opacity:0; transform: translateY(-14px); }
+ to {
+ opacity:1; transform: none; }
+ }
+
+  @keyframes fadeUp   {
+ from {
+ opacity:0; transform: translateY(10px);  }
+ to {
+ opacity:1; transform: none; }
+ }
+
+  @keyframes slideIn  {
+ from {
+ opacity:0; transform: translateX(-6px);  }
+ to {
+ opacity:1; transform: none; }
+ }
+/* BUDGET */
+
+  .section-budget {
+
+    --bud-bg: #05080a;
+    --bud-surface: #0c1014;
+    --bud-card: #111820;
+    --bud-border: #1c2830;
+    --bud-border2: #243040;
+    --bud-accent: #00e5a0;
+    --bud-accent-dim: #00e5a012;
+    --bud-accent-border: #00e5a030;
+    --bud-gold: #f0c040;
+    --bud-gold-dim: #f0c04012;
+    --bud-red: #ff5050;
+    --bud-red-dim: #ff505012;
+    --bud-red-border: #ff505030;
+    --bud-blue: #4d9fff;
+    --bud-blue-dim: #4d9fff12;
+    --bud-warn: #ff9040;
+    --bud-warn-dim: #ff904012;
+    --bud-text: #e8f0f5;
+    --bud-muted: #4a6070;
+    --bud-muted2: #1c2830;
+  }
+.section-budget /* ── NAV ── */
+  .nav {
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bud-bg);
+    border-bottom: 1px solid var(--bud-border);
+    padding: 0 16px;
+    display: flex;
+    gap: 2px;
+  }
+.section-budget .nav-btn {
+
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 14px 12px;
+    border: none;
+    background: transparent;
+    color: var(--bud-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+.section-budget .nav-btn:hover {
+ color: var(--bud-text); }
+.section-budget .nav-btn.active {
+ color: var(--bud-accent); border-bottom-color: var(--bud-accent); }
+.section-budget /* ── VIEWS ── */
+  .view {
+ display: none; padding: 20px 16px; max-width: 680px; margin: 0 auto; }
+.section-budget .view.active {
+ display: block; }
+.section-budget /* ── TYPOGRAPHY ── */
+  .page-title {
+
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--bud-text);
+    margin-bottom: 4px;
+  }
+.section-budget .page-sub {
+
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--bud-muted);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+.section-budget .section-label {
+
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--bud-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 16px 0 8px;
+  }
+.section-budget /* ── CARDS ── */
+  .card {
+
+    background: var(--bud-card);
+    border: 1px solid var(--bud-border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 8px;
+  }
+.section-budget .card-row {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+.section-budget /* ── BIG NUMBER ── */
+  .big-num {
+
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    line-height: 1;
+  }
+.section-budget /* ── PROGRESS BAR ── */
+  .prog-wrap {
+
+    background: var(--bud-muted2);
+    border-radius: 4px;
+    height: 5px;
+    overflow: hidden;
+    margin: 8px 0 4px;
+  }
+.section-budget .prog-fill {
+
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+.section-budget .prog-ok {
+ background: var(--bud-accent); }
+.section-budget .prog-warn {
+ background: var(--bud-warn); }
+.section-budget .prog-over {
+ background: var(--bud-red); }
+.section-budget /* ── BUDGET ROWS ── */
+  .budget-row {
+
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--bud-card);
+    border: 1px solid var(--bud-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+    transition: border-color 0.15s;
+  }
+.section-budget .budget-row:hover {
+ border-color: var(--bud-border2); }
+.section-budget .brow-stripe {
+ width: 3px; align-self: stretch; flex-shrink: 0; }
+.section-budget .brow-icon {
+ font-size: 16px; padding: 12px 10px; background: var(--bud-surface); border-right: 1px solid var(--bud-border); flex-shrink: 0; }
+.section-budget .brow-
+  .brow-name {
+ font-size: 13px; font-weight: 500; color: var(--bud-text); margin-bottom: 2px; }
+.section-budget .brow-bar-wrap {
+ background: var(--bud-muted2); border-radius: 3px; height: 3px; margin: 4px 0 2px; overflow: hidden; }
+.section-budget .brow-bar-fill {
+ height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.section-budget .brow-bar-sub {
+ font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--bud-muted); }
+.section-budget .brow-right {
+ padding: 10px 12px; text-align: right; flex-shrink: 0; }
+.section-budget .brow-spent {
+ font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; line-height: 1; }
+.section-budget .brow-limit {
+ font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--bud-muted); margin-top: 1px; }
+.section-budget /* ── LOG FORM ── */
+  .log-form {
+
+    background: var(--bud-surface);
+    border: 1px solid var(--bud-border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+.section-budget .form-row {
+
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+.section-budget .form-row:last-child {
+ margin-bottom: 0; }
+.section-budget .inp {
+
+    flex: 1;
+    background: var(--bud-card);
+    border: 1px solid var(--bud-border);
+    border-radius: 7px;
+    padding: 12px 14px;
+    color: var(--bud-text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 0;
+  }
+.section-budget .inp:focus {
+ border-color: var(--bud-accent); }
+.section-budget .inp::placeholder {
+ color: var(--bud-muted); }
+.section-budget select.inp {
+ cursor: pointer; }
+.section-budget select.inp option {
+ background: var(--bud-card); }
+.section-budget .btn {
+
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+.section-budget .btn-primary {
+ background: var(--bud-accent); color: #05080a; }
+.section-budget .btn-primary:hover {
+ background: #00ffb3; }
+.section-budget .btn-danger {
+ background: var(--bud-red-dim); color: var(--bud-red); border: 1px solid var(--bud-red-border); }
+.section-budget .btn-danger:hover {
+ background: var(--bud-red); color: #05080a; }
+.section-budget .btn-gold {
+ background: var(--bud-gold-dim); color: var(--bud-gold); border: 1px solid #f0c04030; }
+.section-budget .btn-gold:hover {
+ background: var(--bud-gold); color: #05080a; }
+.section-budget .btn-ghost {
+ background: var(--bud-card); color: var(--bud-muted); border: 1px solid var(--bud-border); }
+.section-budget .btn-ghost:hover {
+ color: var(--bud-text); border-color: var(--bud-border2); }
+.section-budget /* ── TRANSACTION LIST ── */
+  .tx-item {
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bud-card);
+    border: 1px solid var(--bud-border);
+    border-radius: 7px;
+    margin-bottom: 5px;
+    animation: slideIn 0.2s ease both;
+  }
+.section-budget .tx-emoji {
+ font-size: 16px; flex-shrink: 0; }
+.section-budget .tx-cat {
+ font-size: 11px; color: var(--bud-muted); font-family: 'IBM Plex Mono', monospace; flex: 1; }
+.section-budget .tx-amount {
+ font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; color: var(--bud-red); flex-shrink: 0; }
+.section-budget .tx-amount.income {
+ color: var(--bud-accent); }
+.section-budget .tx-del {
+ background: none; border: none; color: var(--bud-muted2); cursor: pointer; font-size: 14px; padding: 2px 4px; transition: color 0.15s; flex-shrink: 0; }
+.section-budget .tx-del:hover {
+ color: var(--bud-red); }
+.section-budget /* ── PLEX GOAL ── */
+  .plex-scenario {
+
+    background: var(--bud-card);
+    border: 1px solid var(--bud-border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 8px;
+  }
+.section-budget .plex-tag {
+
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--bud-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+.section-budget .plex-title {
+
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--bud-text);
+    margin-bottom: 12px;
+  }
+.section-budget .plex-stat-row {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--bud-border);
+    font-size: 12px;
+  }
+.section-budget .plex-stat-row:last-of-type {
+ border-bottom: none; }
+.section-budget .plex-stat-label {
+ color: var(--bud-muted); font-weight: 300; }
+.section-budget .plex-stat-val {
+ font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; }
+.section-budget /* ── SAVINGS DEPOSIT ── */
+  .savings-total-box {
+
+    background: var(--bud-accent-dim);
+    border: 1px solid var(--bud-accent-border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+.section-budget /* ── NOTICE BANNER ── */
+  .notice {
+
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+.section-budget .notice strong {
+ font-weight: 500; }
+.section-budget .notice-warn {
+ background: var(--bud-warn-dim); border: 1px solid #ff904030; color: var(--bud-warn); }
+.section-budget .notice-good {
+ background: var(--bud-accent-dim); border: 1px solid var(--bud-accent-border); color: #7af5d0; }
+.section-budget .notice-info {
+ background: var(--bud-blue-dim); border: 1px solid #4d9fff30; color: #90c4ff; }
+.section-budget /* ── LOADING ── */
+  .loading {
+
+    text-align: center;
+    padding: 40px;
+    color: var(--bud-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+
+  @keyframes slideIn {
+ from {
+ opacity:0; transform: translateX(-6px); }
+ to {
+ opacity:1; transform: none; }
+ }
+
+  @keyframes fadeUp  {
+ from {
+ opacity:0; transform: translateY(8px);  }
+ to {
+ opacity:1; transform: none; }
+ }
+/* BUDGET NAV inside section */
+.section-budget { padding-bottom: 60px; }
+
+/* NUTRITION */
+
+  .section-nutrition {
+
+    --nu-bg: #0d0f0a;
+    --nu-surface: #141710;
+    --nu-card: #1a1e14;
+    --nu-border: #252c1c;
+    --nu-border2: #303820;
+    --nu-accent: #a8e060;
+    --nu-accent-dim: #a8e06014;
+    --nu-accent-border: #a8e06030;
+    --nu-warm: #e8b84a;
+    --nu-warm-dim: #e8b84a14;
+    --nu-warm-border: #e8b84a30;
+    --nu-protein: #60c8e0;
+    --nu-protein-dim: #60c8e014;
+    --nu-protein-border: #60c8e030;
+    --nu-text: #edf2e8;
+    --nu-muted: #4a5c38;
+    --nu-muted2: #252c1c;
+  }
+.section-nutrition .container {
+ max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+.section-nutrition /* ── HEADER ── */
+  header {
+ margin-bottom: 28px; animation: fadeDown 0.5s ease both; }
+.section-nutrition .header-tag {
+
+    font-size: 11px;
+    color: var(--nu-accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+.section-nutrition h1 {
+
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(48px, 12vw, 76px);
+    line-height: 0.9;
+    font-weight: 900;
+    color: var(--nu-text);
+    letter-spacing: -2px;
+  }
+.section-nutrition h1 em {
+ color: var(--nu-accent); font-style: normal; }
+.section-nutrition .subtitle {
+
+    font-family: 'Literata', serif;
+    font-size: 13px;
+    color: var(--nu-muted);
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.6;
+  }
+.section-nutrition /* ── TABS ── */
+  .tabs {
+
+    display: flex;
+    gap: 3px;
+    margin-bottom: 22px;
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    border-radius: 10px;
+    padding: 4px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+.section-nutrition .tab {
+
+    flex: 1;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 10px 6px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--nu-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+.section-nutrition .tab:hover {
+ color: var(--nu-text); }
+.section-nutrition .tab.active {
+ background: var(--nu-accent); color: #0d0f0a; }
+.section-nutrition /* ── VIEWS ── */
+  .view {
+ display: none; animation: fadeUp 0.25s ease both; }
+.section-nutrition .view.active {
+ display: block; }
+.section-nutrition /* ── SECTION LABEL ── */
+  .section-label {
+
+    font-size: 10px;
+    color: var(--nu-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 16px 0 8px;
+  }
+.section-nutrition /* ── NUMBERS STRIP ── */
+  .numbers-strip {
+
+    display: flex;
+    gap: 3px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.4s 0.1s ease both;
+  }
+.section-nutrition .num-card {
+
+    flex: 1;
+    background: var(--nu-card);
+    border: 1px solid var(--nu-border);
+    border-radius: 8px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+.section-nutrition .num-val {
+
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--nu-accent);
+  }
+.section-nutrition .num-val.warm {
+ color: var(--nu-warm); }
+.section-nutrition .num-val.protein {
+ color: var(--nu-protein); }
+.section-nutrition .num-label {
+
+    font-size: 10px;
+    color: var(--nu-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 3px;
+    font-weight: 700;
+  }
+.section-nutrition /* ── INFO CARD ── */
+  .info-card {
+
+    background: var(--nu-card);
+    border: 1px solid var(--nu-border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+  }
+.section-nutrition .info-card:hover {
+ border-color: var(--nu-border2); }
+.section-nutrition .info-card-title {
+
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--nu-text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+.section-nutrition .info-card-
+
+  .info-card-body strong {
+ color: var(--nu-text); font-weight: 500; font-family: 'Cabinet Grotesk', sans-serif; }
+.section-nutrition .info-card-body .green {
+ color: var(--nu-accent); font-weight: 500; }
+.section-nutrition .info-card-body .warm {
+ color: var(--nu-warm);   font-weight: 500; }
+.section-nutrition .info-card-body .blue {
+ color: var(--nu-protein); font-weight: 500; }
+.section-nutrition /* ── MEAL CARDS ── */
+  .meal-card {
+
+    background: var(--nu-card);
+    border: 1px solid var(--nu-border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+    animation: slideIn 0.3s ease both;
+  }
+.section-nutrition .meal-card:hover {
+ border-color: var(--nu-border2); }
+.section-nutrition .meal-header {
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: var(--nu-surface);
+    border-bottom: 1px solid var(--nu-border);
+  }
+.section-nutrition .meal-emoji {
+ font-size: 20px; flex-shrink: 0; }
+.section-nutrition .meal-title {
+
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--nu-text);
+    flex: 1;
+  }
+.section-nutrition .meal-meta {
+
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+.section-nutrition .meal-tag {
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+.section-nutrition .tag-protein {
+ background: var(--nu-protein-dim); color: var(--nu-protein); border: 1px solid var(--nu-protein-border); }
+.section-nutrition .tag-cal {
+ background: var(--nu-warm-dim);    color: var(--nu-warm);    border: 1px solid var(--nu-warm-border); }
+.section-nutrition .tag-fast {
+ background: var(--nu-accent-dim);  color: var(--nu-accent);  border: 1px solid var(--nu-accent-border); }
+.section-nutrition .tag-easy {
+ background: #ffffff0a; color: #8a9a7a; border: 1px solid #ffffff15; }
+.section-nutrition .meal-
+
+  .meal-item {
+
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--nu-border);
+    font-size: 13px;
+  }
+.section-nutrition .meal-item:last-child {
+ border-bottom: none; padding-bottom: 0; }
+.section-nutrition .meal-item-dot {
+
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--nu-accent);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+.section-nutrition .meal-item-dot.warm {
+ background: var(--nu-warm); }
+.section-nutrition .meal-item-dot.blue {
+ background: var(--nu-protein); }
+.section-nutrition .meal-item-name {
+
+    font-weight: 700;
+    color: var(--nu-text);
+    flex: 1;
+  }
+.section-nutrition .meal-item-detail {
+
+    font-family: 'Literata', serif;
+    font-size: 12px;
+    color: var(--nu-muted);
+    line-height: 1.5;
+  }
+.section-nutrition .meal-item-protein {
+
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--nu-protein);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+.section-nutrition .meal-tip {
+
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--nu-accent-dim);
+    border: 1px solid var(--nu-accent-border);
+    border-radius: 6px;
+    font-size: 12px;
+    color: #c8f080;
+    line-height: 1.5;
+    font-family: 'Literata', serif;
+  }
+.section-nutrition /* ── SNACK GRID ── */
+  .snack-grid {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+.section-nutrition .snack-card {
+
+    background: var(--nu-card);
+    border: 1px solid var(--nu-border);
+    border-radius: 8px;
+    padding: 12px;
+    transition: border-color 0.15s;
+  }
+.section-nutrition .snack-card:hover {
+ border-color: var(--nu-border2); }
+.section-nutrition .snack-emoji {
+ font-size: 22px; margin-bottom: 6px; }
+.section-nutrition .snack-name {
+ font-size: 13px; font-weight: 800; color: var(--nu-text); margin-bottom: 3px; }
+.section-nutrition .snack-protein {
+ font-size: 11px; font-weight: 700; color: var(--nu-protein); margin-bottom: 4px; }
+.section-nutrition .snack-detail {
+ font-family: 'Literata', serif; font-size: 11px; color: var(--nu-muted); line-height: 1.4; }
+.section-nutrition /* ── PROTEIN TRACKER ── */
+  .protein-day {
+
+    background: var(--nu-card);
+    border: 1px solid var(--nu-border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+.section-nutrition .pt-row {
+
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--nu-border);
+    gap: 12px;
+  }
+.section-nutrition .pt-row:last-child {
+ border-bottom: none; }
+.section-nutrition .pt-meal {
+
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--nu-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+.section-nutrition .pt-food {
+ font-size: 13px; color: var(--nu-text); flex: 1; font-weight: 500; }
+.section-nutrition .pt-food span {
+ color: var(--nu-muted); font-weight: 400; font-size: 12px; }
+.section-nutrition .pt-protein {
+
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--nu-protein);
+    flex-shrink: 0;
+    min-width: 40px;
+    text-align: right;
+  }
+.section-nutrition .pt-total {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--nu-protein-dim);
+    border-top: 1px solid var(--nu-protein-border);
+  }
+.section-nutrition .pt-total-label {
+ font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--nu-protein); }
+.section-nutrition .pt-total-val {
+ font-size: 24px; font-weight: 900; color: var(--nu-protein); }
+.section-nutrition /* ── PROGRESS BAR ── */
+  .prog-wrap {
+
+    background: var(--nu-muted2);
+    border-radius: 4px;
+    height: 4px;
+    overflow: hidden;
+    margin: 8px 0 4px;
+  }
+.section-nutrition .prog-fill {
+
+    height: 100%;
+    border-radius: 4px;
+    background: var(--nu-protein);
+    transition: width 0.6s ease;
+  }
+.section-nutrition /* ── RULES ── */
+  .rules {
+
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 8px;
+  }
+.section-nutrition .rules-title {
+
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--nu-accent);
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+.section-nutrition .rule {
+
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--nu-border);
+    font-size: 13px;
+  }
+.section-nutrition .rule:last-child {
+ border-bottom: none; }
+.section-nutrition .rule-icon {
+ flex-shrink: 0; font-size: 15px; }
+.section-nutrition .rule-text {
+ font-family: 'Literata', serif; color: var(--nu-muted); line-height: 1.6; font-weight: 300; }
+.section-nutrition .rule-text strong {
+ color: var(--nu-text); font-weight: 500; font-family: 'Cabinet Grotesk', sans-serif; }
+.section-nutrition .rule-text .green {
+ color: var(--nu-accent); font-weight: 500; font-family: 'Cabinet Grotesk', sans-serif; }
+
+
+  @keyframes fadeDown {
+ from {
+ opacity:0; transform: translateY(-14px); }
+ to {
+ opacity:1; transform: none; }
+ }
+
+  @keyframes fadeUp   {
+ from {
+ opacity:0; transform: translateY(10px);  }
+ to {
+ opacity:1; transform: none; }
+ }
+
+  @keyframes slideIn  {
+ from {
+ opacity:0; transform: translateX(-6px);  }
+ to {
+ opacity:1; transform: none; }
+ }
+</style>
+</head>
+<body>
+<div class="app-container">
+
+  <!-- TOP NAV DROPDOWN -->
+  <div class="top-nav">
+    <select class="top-nav-select" id="top-nav-select" onchange="showSection(this.value)">
+      <option value="schedule">📅  Schedule</option>
+      <option value="hair">💧  Hair Care</option>
+      <option value="skin">✨  Skin Care</option>
+      <option value="workout">💪  Workout</option>
+      <option value="budget">💰  Budget</option>
+      <option value="nutrition">🥗  Nutrition</option>
+    </select>
+    <div class="top-nav-arrow">▼</div>
+    <div class="top-nav-accent nav-sched" id="nav-accent"></div>
+  </div>
+
+  <!-- ======================================================
+       SCHEDULE SECTION
+       ====================================================== -->
+  <div class="section active" id="section-schedule">
+
+    <div class="sched-header">
+      <div class="sched-tag">// daily system v1.0</div>
+      <h1 class="sched-h1">TAKE<br><span>CONTROL</span></h1>
+      <div class="sched-subtitle">5:00AM WAKE · CÉGEP SESSION · NO EXCUSES</div>
+    </div>
+
+    <div class="sched-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#e8ff47"></div>Wake/Workout</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div>Study</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#47c8ff"></div>Japanese</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#b47fff"></div>Book</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff9d47"></div>Transit</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6b9d"></div>Class</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#47ffda"></div>Shower / Hair</div>
+    </div>
+
+    <div class="day-tabs">
+      <button class="day-tab weekend-day active" onclick="showSchedDay('sunday', this)">Sun</button>
+      <button class="day-tab school-day" onclick="showSchedDay('monday', this)">Mon</button>
+      <button class="day-tab" onclick="showSchedDay('tuesday', this)">Tue</button>
+      <button class="day-tab" onclick="showSchedDay('wednesday', this)">Wed</button>
+      <button class="day-tab school-day" onclick="showSchedDay('thursday', this)">Thu</button>
+      <button class="day-tab school-day" onclick="showSchedDay('friday', this)">Fri</button>
+      <button class="day-tab weekend-day" onclick="showSchedDay('saturday', this)">Sat</button>
+    </div>
+
+    <!-- SUNDAY -->
+    <div class="sched-day active" id="sched-sunday">
+      <div class="day-type-badge badge-weekend">🏡 Day Off — Sunday (Mom's → Home)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">7:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-japanese"><div class="block-time">7:15 – 8:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Anki Only</div><div class="block-detail">Keep the streak alive. Light and easy.</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-meal"><div class="block-time">8:30 – 9:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Breakfast</div></div><div class="block-icon">🍳</div></div></div>
+        <div class="block b-free"><div class="block-time">9:00 – ~14:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Mom Time — Full Relax</div><div class="block-detail">No studying. No guilt. You earned a real day off.</div></div><div class="block-icon">📺</div></div></div>
+        <div class="block b-transit"><div class="block-time">~14:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Travel Home</div><div class="block-detail">Anki on the way back if you feel like it</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-meal"><div class="block-time">~16:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Arrive Home — Dinner + Reset</div><div class="block-detail">Prep clothes, pack bag, mindset for Monday</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-shower"><div class="block-time">17:00 – 18:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Full Hair Wash Routine</div><div class="block-detail">Shampoo, deep condition, style — see Hair Care tab</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-free"><div class="block-time">18:30 – 21:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time — Hair Drying</div><div class="block-detail">Don't touch the hair. Relax while it dries.</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down — No exceptions</div><div class="block-detail">5am wake tomorrow. Bonnet on once hair is dry.</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- MONDAY -->
+    <div class="sched-day" id="sched-monday">
+      <div class="day-type-badge badge-school">📚 School Day — Monday</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div><div class="block-detail">No snooze. Phone across the room.</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:10 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout</div><div class="block-detail">Home — beginner bodyweight/equipment routine</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">6:00 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div><div class="block-detail">Pack bag the night before</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-japanese"><div class="block-time">6:30 – 7:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese Study</div><div class="block-detail">Anki flashcards + grammar — quiet morning focus</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-transit"><div class="block-time">7:30 – 9:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit to School</div><div class="block-detail">Anki on phone, podcast, or review notes</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-study"><div class="block-time">9:30 – 10:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Pre-class Review</div><div class="block-detail">Review Calcul notes before class</div></div><div class="block-icon">📖</div></div></div>
+        <div class="block b-school"><div class="block-time">10:00 – 12:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Calcul Intégral</div><div class="block-detail">B-515 — Michaël Medeiros Charbonneau</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-meal"><div class="block-time">12:00 – 12:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch</div><div class="block-detail">Eat, take a walk, decompress</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">12:45 – 15:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Session</div><div class="block-detail">Calcul + Ondes homework & exercises</div></div><div class="block-icon">✏️</div></div></div>
+        <div class="block b-school"><div class="block-time">16:00 – 17:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Ondes et Physique Moderne</div><div class="block-detail">F-445 — Jean-François Courville</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-transit"><div class="block-time">17:00 – 19:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit Home</div><div class="block-detail">Review today's notes, Anki Japanese</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-meal"><div class="block-time">19:00 – 19:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner</div><div class="block-detail">Cook something real, no screens</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-book"><div class="block-time">19:30 – 20:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div><div class="block-detail">1 hour, no editing, just output</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-free"><div class="block-time">20:30 – 21:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div><div class="block-detail">Earned. Hard stop at 21:30.</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:30 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Prep</div><div class="block-detail">Pack bag, plan tomorrow, no screens</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- TUESDAY -->
+    <div class="sched-day" id="sched-tuesday">
+      <div class="day-type-badge badge-home">🏠 Full Home Day — Tuesday</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div><div class="block-detail">Phone across the room. No snooze.</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:10 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout</div><div class="block-detail">Home session — different focus than Monday</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">6:00 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-japanese"><div class="block-time">6:30 – 8:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Deep Session</div><div class="block-detail">Grammar study + new vocab + Anki (90 min)</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-study"><div class="block-time">8:00 – 10:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 1</div><div class="block-detail">Calcul Intégral — problems + theory</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-meal"><div class="block-time">10:30 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Break + Snack</div><div class="block-detail">Walk outside if possible</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-study"><div class="block-time">11:00 – 13:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 2</div><div class="block-detail">Ondes et Physique Moderne</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-meal"><div class="block-time">13:00 – 13:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch Break</div><div class="block-detail">Full stop. Eat properly.</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">13:45 – 14:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Communication — Quick Review</div><div class="block-detail">1h max — just skim the PowerPoints</div></div><div class="block-icon">📸</div></div></div>
+        <div class="block b-book"><div class="block-time">14:45 – 16:15</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div><div class="block-detail">Best creative window of the afternoon</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-meal"><div class="block-time">16:15 – 16:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-free"><div class="block-time">16:45 – 21:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div><div class="block-detail">Big reward for a big study day. Hard stop 21:00.</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Prep</div><div class="block-detail">Plan Wednesday, no need to pack</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY -->
+    <div class="sched-day" id="sched-wednesday">
+      <div class="day-type-badge badge-home">🏠 Full Home Day — Wednesday</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:10 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">6:00 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-japanese"><div class="block-time">6:30 – 8:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Deep Session</div><div class="block-detail">Grammar + new vocab + Anki (90 min)</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-study"><div class="block-time">8:00 – 10:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 1</div><div class="block-detail">Calcul Intégral — problems + theory</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-meal"><div class="block-time">10:30 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Break + Snack</div><div class="block-detail">Walk outside if possible</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-study"><div class="block-time">11:00 – 13:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block 2</div><div class="block-detail">Ondes et Physique Moderne</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-meal"><div class="block-time">13:00 – 13:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch Break</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">13:45 – 14:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Communication — Quick Review</div><div class="block-detail">1h max — just skim the PowerPoints</div></div><div class="block-icon">📸</div></div></div>
+        <div class="block b-book"><div class="block-time">14:45 – 16:15</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-meal"><div class="block-time">16:15 – 16:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-free"><div class="block-time">16:45 – 19:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-shower"><div class="block-time">19:30 – 20:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Hair Co-Wash Routine</div><div class="block-detail">Full co-wash, style, air dry — see Hair Care tab</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Pack Bag</div><div class="block-detail">Early departure Thursday — pack tonight</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- THURSDAY -->
+    <div class="sched-day" id="sched-thursday">
+      <div class="day-type-badge badge-school">📚 School Day — Thursday (Early Departure)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:05 – 5:45</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout — 40 min</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">5:45 – 6:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div><div class="block-detail">Bag already packed from last night</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-transit"><div class="block-time">6:30 – 8:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit to School</div><div class="block-detail">Anki + review Communication notes</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-school"><div class="block-time">8:30 – 10:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Communication, Art et Photo</div><div class="block-detail">F-330 — Juliana Sofia Nuzzo</div></div><div class="block-icon">📸</div></div></div>
+        <div class="block b-transit"><div class="block-time">10:00 – 12:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit Home</div><div class="block-detail">Anki on the ride</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-meal"><div class="block-time">12:00 – 12:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Lunch</div></div><div class="block-icon">🍱</div></div></div>
+        <div class="block b-study"><div class="block-time">12:30 – 15:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study — Calcul + Ondes</div></div><div class="block-icon">📖</div></div></div>
+        <div class="block b-book"><div class="block-time">15:00 – 16:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-meal"><div class="block-time">16:00 – 16:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Dinner (early)</div></div><div class="block-icon">🍜</div></div></div>
+        <div class="block b-free"><div class="block-time">16:30 – 19:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Free Time / Games</div></div><div class="block-icon">🎮</div></div></div>
+        <div class="block b-shower"><div class="block-time">19:30 – 20:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Hair Co-Wash Routine</div><div class="block-detail">Full co-wash, style, air dry — see Hair Care tab</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-sleep"><div class="block-time">21:00 – 22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wind Down + Pack Bag</div><div class="block-detail">Leave at 6:30am tomorrow</div></div><div class="block-icon">🌙</div></div></div>
+        <div class="block b-sleep"><div class="block-time">22:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Sleep</div></div><div class="block-icon">💤</div></div></div>
+      </div>
+    </div>
+
+    <!-- FRIDAY -->
+    <div class="sched-day" id="sched-friday">
+      <div class="day-type-badge badge-school">📚 School Day — Friday (Early Departure)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">5:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div></div><div class="block-icon">⚡</div></div></div>
+        <div class="block b-workout"><div class="block-time">5:05 – 5:35</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Workout — 30 min</div></div><div class="block-icon">🏋️</div></div></div>
+        <div class="block b-meal"><div class="block-time">5:35 – 6:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Shower + Breakfast</div><div class="block-detail">Quick. Bag already packed from last night.</div></div><div class="block-icon">🚿</div></div></div>
+        <div class="block b-transit"><div class="block-time">6:00 – 8:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit to School</div><div class="block-detail">Anki + review Calcul notes</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-school"><div class="block-time">8:00 – 10:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Calcul Intégral</div><div class="block-detail">B-515 — Michaël Medeiros Charbonneau</div></div><div class="block-icon">📐</div></div></div>
+        <div class="block b-school"><div class="block-time">10:00 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Ondes et Physique Moderne</div><div class="block-detail">F-470 — Jean-François Courville</div></div><div class="block-icon">⚛️</div></div></div>
+        <div class="block b-transit"><div class="block-time">11:00 – 13:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Transit Home (to Mom's)</div><div class="block-detail">Anki on the ride</div></div><div class="block-icon">🚌</div></div></div>
+        <div class="block b-free"><div class="block-time">13:00+</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Mom's — Shows + Games</div><div class="block-detail">You've earned it. Full relax.</div></div><div class="block-icon">🎮</div></div></div>
+      </div>
+    </div>
+
+    <!-- SATURDAY -->
+    <div class="sched-day" id="sched-saturday">
+      <div class="day-type-badge badge-weekend">🏡 Weekend — Saturday (Mom's)</div>
+      <div class="schedule">
+        <div class="block b-wake"><div class="block-time">7:00 AM</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Wake Up</div><div class="block-detail">7am — still early, still disciplined</div></div><div class="block-icon">☀️</div></div></div>
+        <div class="block b-japanese"><div class="block-time">7:15 – 8:30</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Japanese — Anki + Review</div><div class="block-detail">75 min — good session before the day starts</div></div><div class="block-icon">🇯🇵</div></div></div>
+        <div class="block b-meal"><div class="block-time">8:30 – 9:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Breakfast</div></div><div class="block-icon">🍳</div></div></div>
+        <div class="block b-study"><div class="block-time">9:00 – 11:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Study Block</div><div class="block-detail">2h — Calcul or Ondes, most urgent thing</div></div><div class="block-icon">📖</div></div></div>
+        <div class="block b-book"><div class="block-time">11:00 – 12:00</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Write — Book</div><div class="block-detail">1h before the day goes social</div></div><div class="block-icon">✍️</div></div></div>
+        <div class="block b-free"><div class="block-time">12:00+</div><div class="block-accent"></div><div class="block-content"><div><div class="block-title">Mom Time — Shows + Games</div><div class="block-detail">Rest. Recharge. You did the work.</div></div><div class="block-icon">📺</div></div></div>
+      </div>
+    </div>
+
+    <!-- Schedule Rules -->
+    <div class="sched-rules">
+      <div class="sched-rules-title">THE RULES</div>
+      <div class="sched-rule"><div class="sched-rule-num">01</div><div class="sched-rule-text"><strong>Phone across the room</strong> every night. No exceptions. This is how you actually wake up at 5am.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">02</div><div class="sched-rule-text"><strong>Games only after all blocks are done.</strong> Not during. Not "just 30 min first." After.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">03</div><div class="sched-rule-text"><strong>Transit time is productive time.</strong> Anki on the phone during all 4 hours of daily commute = ~1,000 Japanese cards/week.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">04</div><div class="sched-rule-text"><strong>Book writing = output only.</strong> No editing during the session. Just write. Fix it later.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">05</div><div class="sched-rule-text"><strong>Missed a block?</strong> Don't skip the next one. Just continue. Consistency beats perfection.</div></div>
+      <div class="sched-rule"><div class="sched-rule-num">06</div><div class="sched-rule-text"><strong>Weekends at mom's are protected.</strong> Do your morning blocks early and then fully enjoy the time.</div></div>
+    </div>
+
+  </div><!-- end section-schedule -->
+
+  <!-- ======================================================
+       HAIR CARE SECTION
+       ====================================================== -->
+  <div class="section" id="section-hair">
+
+    <div class="hair-header">
+      <div class="hair-tag">// hair care system</div>
+      <h1 class="hair-h1">Your <em>Curl</em><br>Routine</h1>
+      <div class="hair-subtitle">Low porosity · Afro-textured · Goal: big, soft, frizz-free curls</div>
+    </div>
+
+    <div class="products-bar">
+      <div class="products-bar-title">Your Products</div>
+      <div class="products-grid">
+        <div class="product-tag"><div class="product-dot" style="background:#c8573a"></div>Kinky-Curly Come Clean (clarify)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#c8883a"></div>Design Essentials A&A (shampoo)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#4a8a5a"></div>As I Am CoWash</div>
+        <div class="product-tag"><div class="product-dot" style="background:#8a5c9a"></div>Mielle Babassu & Mint (deep cond.)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#4a6a8a"></div>Kinky-Curly Knot Today (leave-in)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#8a6a4a"></div>Aunt Jackie's Curl La La (cream)</div>
+        <div class="product-tag"><div class="product-dot" style="background:#7a7a3a"></div>Argan oil</div>
+        <div class="product-tag"><div class="product-dot" style="background:#3a7a8a"></div>DIY spray bottle (water + leave-in)</div>
+      </div>
+    </div>
+
+    <div class="hair-tabs">
+      <button class="hair-tab active" onclick="showHairDay('h-sunday', this)">Sun</button>
+      <button class="hair-tab" onclick="showHairDay('h-monday', this)">Mon</button>
+      <button class="hair-tab" onclick="showHairDay('h-tuesday', this)">Tue</button>
+      <button class="hair-tab" onclick="showHairDay('h-wednesday', this)">Wed</button>
+      <button class="hair-tab" onclick="showHairDay('h-thursday', this)">Thu</button>
+      <button class="hair-tab" onclick="showHairDay('h-friday', this)">Fri</button>
+      <button class="hair-tab" onclick="showHairDay('h-saturday', this)">Sat</button>
+    </div>
+
+    <!-- SUNDAY HAIR -->
+    <div class="hair-day active" id="h-sunday">
+      <div class="day-header">
+        <div class="day-title">Sunday<br>Wash Day</div>
+        <div class="day-badge badge-wash">🧴 Full Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Wash</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-shampoo"></div>
+          <div class="step-body">
+            <div class="step-title">Shampoo <span class="step-product p-shampoo">Design Essentials A&A</span></div>
+            <div class="step-desc">Wet your hair thoroughly with warm water first. Apply shampoo to your scalp — not the length of your hair. Massage with your fingertips in circular motions for 2-3 minutes. The lather will clean the lengths as it rinses through. Rinse well with warm water.</div>
+            <div class="step-tip">⚡ Use Kinky-Curly Come Clean instead on the 1st Sunday of each month to fully reset buildup.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-deep"></div>
+          <div class="step-body">
+            <div class="step-title">Deep condition + Detangle <span class="step-product p-deep">Mielle Babassu & Mint</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Apply deep conditioner generously from roots to ends on soaking wet hair. Then while it's still in, divide into 4 sections and detangle with your wide-tooth comb working from ends to roots — this is when you have maximum slip. Once detangled, put on your shower cap and wrap a warm wet towel around your head. Leave for 10-15 minutes. Rinse with cool water.</div>
+            <div class="step-tip">🔥 The warm towel forces your cuticles open so the conditioner actually penetrates. Don't skip this for low porosity hair.</div>
+          </div>
+        </div>
+        <div class="phase-label">Styling (on soaking wet hair — don't towel dry first)</div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair is already detangled. Now use your paddle brush section by section — place at root, drag to ends in one smooth stroke. This is what creates bigger curl clumps.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Apply leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">Hair should still be dripping wet. Apply a generous amount section by section, scrunching upward. Don't rake — scrunch. This encourages curl clumping. Make sure every strand is coated.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Apply curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Apply on top of your leave-in while hair is still very wet. Small amount — emulsify between palms, scrunch into each section upward. Work in sections for even coverage.</div>
+            <div class="step-tip">💡 Less is more with low porosity hair. Start small and add if needed — never the other way around.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal with oil <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops only. Rub between palms and lightly scrunch over your hair. This seals all the moisture in.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Scrunch + Air dry — hands off 🚫</div>
+            <div class="step-desc">Scrunch out excess dripping water with a microfiber towel or old soft t-shirt — scrunch upward a few times and stop, don't rub. Then leave your hair completely alone until fully dry. Every touch breaks curl clumps and creates frizz.</div>
+            <div class="step-tip">✋ No touching. Not even to check. Wait until completely dry before putting your bonnet on.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night</div>
+        <div class="step">
+          <div class="step-num">8</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Put on satin bonnet 🎀</div>
+            <div class="step-desc">Only once fully dry. Every single night — protects your curl pattern, prevents friction damage, keeps moisture in.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONDAY HAIR -->
+    <div class="hair-day" id="h-monday">
+      <div class="day-header">
+        <div class="day-title">Monday<br>Co-Wash Day</div>
+        <div class="day-badge badge-cowash">🌿 Co-Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Wash</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-cowash"></div>
+          <div class="step-body">
+            <div class="step-title">Co-wash + Detangle <span class="step-product p-cowash">As I Am CoWash</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Wet hair with warm water. Apply co-wash to scalp and lengths and massage thoroughly for 2-3 minutes. While it's still in, divide into sections and detangle with your wide-tooth comb from ends to roots — the co-wash gives you slip. Then rinse well.</div>
+          </div>
+        </div>
+        <div class="phase-label">Styling (on soaking wet hair)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair is already detangled. Use the paddle brush section by section from root to ends to clump your curls together.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Apply leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">On soaking wet hair. Scrunch upward section by section. Don't skimp — this is your main moisture layer today.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Apply curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Small amount, scrunched in upward.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops, scrunched lightly. Scrunch out excess water with microfiber towel, then air dry without touching.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night</div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet 🎀</div>
+            <div class="step-desc">Every night, no exceptions. Only once fully dry.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TUESDAY HAIR -->
+    <div class="hair-day" id="h-tuesday">
+      <div class="day-header">
+        <div class="day-title">Tuesday<br>Refresh Day</div>
+        <div class="day-badge badge-spritz">💧 Spritz Only</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning refresh (5 minutes)</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Spritz hair <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Lightly mist your hair all over with your water + leave-in mixture. Not soaking wet — just damp enough to reactivate the curl pattern. Scrunch upward gently with your hands.</div>
+            <div class="step-tip">💡 Spray bottle = mostly water + a small squeeze of Knot Today. Mix once, use all week.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Tiny bit of curl cream if needed <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Only if curls look flat or frizzy. Less than a pea-size, scrunched into the areas that need it only.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Leave it alone</div>
+            <div class="step-desc">You're home today. Let it air dry. Don't touch it while it dries.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night</div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-none"></div>
+          <div class="step-body"><div class="step-title">Satin bonnet 🎀</div><div class="step-desc">Every night.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY HAIR -->
+    <div class="hair-day" id="h-wednesday">
+      <div class="day-header">
+        <div class="day-title">Wednesday<br>Refresh + Night Wash</div>
+        <div class="day-badge badge-cowash">🌿 Day Spritz / Night Co-Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning (same as Tuesday)</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Morning spritz <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light mist, scrunch, leave alone.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night — co-wash so hair is ready for Thursday (leave at 6:30am)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-cowash"></div>
+          <div class="step-body">
+            <div class="step-title">Co-wash + Detangle <span class="step-product p-cowash">As I Am CoWash</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Wet hair with warm water. Apply co-wash, massage scalp thoroughly. While it's still in, detangle section by section with wide-tooth comb from ends to roots. Then rinse well.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair already detangled. Paddle brush section by section from root to ends.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">Scrunch into soaking wet hair section by section.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Small amount scrunched in. Your hair will dry overnight — perfectly defined by morning.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops, scrunched in. Scrunch out excess water with microfiber towel. Air dry fully before sleeping.</div>
+            <div class="step-tip">⏰ Do this early enough that hair is dry before you sleep — wet hair under a bonnet causes damage.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet once dry 🎀</div>
+            <div class="step-desc">Once fully dry, put the bonnet on. Wake up Thursday with your curls already done.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THURSDAY HAIR -->
+    <div class="hair-day" id="h-thursday">
+      <div class="day-header">
+        <div class="day-title">Thursday<br>Morning Refresh + Night Wash</div>
+        <div class="day-badge badge-cowash">🌿 Morning Spritz / Night Co-Wash</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning — hair already done from Wednesday night</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Quick morning refresh <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light spritz and scrunch if needed. Curls should already look great from last night. Takes 2 minutes — you're leaving at 6:30.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night — co-wash so hair is ready for Friday (also leaving at 6:30am)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-cowash"></div>
+          <div class="step-body">
+            <div class="step-title">Co-wash + Detangle <span class="step-product p-cowash">As I Am CoWash</span> <span class="step-product p-tool">Wide-tooth comb</span></div>
+            <div class="step-desc">Wet hair with warm water. Apply co-wash, massage scalp thoroughly. While it's still in, detangle section by section from ends to roots. Then rinse well.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div><div class="step-bar bar-tool"></div>
+          <div class="step-body">
+            <div class="step-title">Paddle brush — define curl clumps <span class="step-product p-tool">Paddle brush</span></div>
+            <div class="step-desc">Hair already detangled. Paddle brush section by section from root to ends.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div><div class="step-bar bar-leavein"></div>
+          <div class="step-body">
+            <div class="step-title">Leave-in <span class="step-product p-leavein">Kinky-Curly Knot Today</span></div>
+            <div class="step-desc">Scrunched into soaking wet hair.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div><div class="step-bar bar-cream"></div>
+          <div class="step-body">
+            <div class="step-title">Curl cream <span class="step-product p-cream">Aunt Jackie's Curl La La</span></div>
+            <div class="step-desc">Small amount scrunched in. Dry overnight.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div><div class="step-bar bar-oil"></div>
+          <div class="step-body">
+            <div class="step-title">Seal <span class="step-product p-oil">Argan oil</span></div>
+            <div class="step-desc">2-3 drops. Scrunch out excess water with microfiber towel. Air dry fully before bonnet.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet once dry 🎀</div>
+            <div class="step-desc">Wake up Friday with your curls already set.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRIDAY HAIR -->
+    <div class="hair-day" id="h-friday">
+      <div class="day-header">
+        <div class="day-title">Friday<br>Morning Refresh</div>
+        <div class="day-badge badge-spritz">💧 Spritz Only</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning — hair already done from Thursday night</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Quick morning refresh <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light spritz and scrunch. Curls already defined from last night. You're leaving at 6:30 — this takes 2 minutes.</div>
+          </div>
+        </div>
+        <div class="phase-label">Night (at mom's)</div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-none"></div>
+          <div class="step-body">
+            <div class="step-title">Satin bonnet 🎀</div>
+            <div class="step-desc">Bring your bonnet to your mom's. Don't skip it just because you're not home.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SATURDAY HAIR -->
+    <div class="hair-day" id="h-saturday">
+      <div class="day-header">
+        <div class="day-title">Saturday<br>Light Refresh</div>
+        <div class="day-badge badge-spritz">💧 Spritz Only</div>
+      </div>
+      <div class="steps">
+        <div class="phase-label">Morning</div>
+        <div class="step">
+          <div class="step-num">1</div><div class="step-bar bar-water"></div>
+          <div class="step-body">
+            <div class="step-title">Spritz and scrunch <span class="step-product p-water">Spray bottle</span></div>
+            <div class="step-desc">Light mist, scrunch upward, leave alone. Sunday wash day is tomorrow — no need to do much today.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div><div class="step-bar bar-none"></div>
+          <div class="step-body"><div class="step-title">Satin bonnet 🎀</div><div class="step-desc">At mom's — bring your bonnet.</div></div>
+        </div>
+        <div class="tips-box">
+          <div class="tips-box-title">💼 What to pack when going to mom's</div>
+          <div class="tip-item"><span>•</span>Spray bottle (or travel-size leave-in + small bottle)</div>
+          <div class="tip-item"><span>•</span>Satin bonnet</div>
+          <div class="tip-item"><span>•</span>Small amount of curl cream in a travel container</div>
+          <div class="tip-item"><span>•</span>That's it — you don't need to bring everything</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hair Golden Rules -->
+    <div class="hair-rules">
+      <div class="hair-rules-title">The Golden Rules</div>
+      <div class="hair-rule"><div class="hair-rule-icon">🔥</div><div class="hair-rule-text"><strong>Heat on deep condition day, always.</strong> Warm towel over shower cap for 10-15 min every Sunday. Without this, products just sit on top of your low porosity hair and do nothing.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">✋</div><div class="hair-rule-text"><strong>Don't touch your hair while it's drying.</strong> Every touch breaks curl clumps and creates frizz. This is the #1 cause of frizzy afros.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">💧</div><div class="hair-rule-text"><strong>Always style on soaking wet hair.</strong> Not damp — soaking. If your hair isn't dripping when you apply products, add more water first.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">⬆️</div><div class="hair-rule-text"><strong>Scrunch upward, never rake downward.</strong> Raking separates curls into individual strands = frizz. Scrunching groups them into clumps = big curls.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">📉</div><div class="hair-rule-text"><strong>Less product than you think.</strong> Low porosity hair builds up fast. Start small and add more if needed — never the other way around.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">🎀</div><div class="hair-rule-text"><strong>Bonnet every single night — only when fully dry.</strong> Including at mom's. Cotton destroys your curl pattern overnight.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">🔄</div><div class="hair-rule-text"><strong>Clarify once a month.</strong> First Sunday — use Kinky-Curly Come Clean instead of Design Essentials. Resets buildup so your hair can absorb moisture again.</div></div>
+      <div class="hair-rule"><div class="hair-rule-icon">⏳</div><div class="hair-rule-text"><strong>Give it 4-6 weeks.</strong> Your hair needs time to adjust. It won't be perfect week one — stick with it.</div></div>
+    </div>
+
+  </div><!-- end section-hair -->
+
+  <!-- ======================================================
+       SKIN CARE SECTION
+       ====================================================== -->
+  <div class="section" id="section-skin">
+
+    <div class="skin-header">
+      <div class="skin-tag">// skin care system</div>
+      <h1 class="skin-h1">CLEAR<br><em>SKIN</em></h1>
+      <div class="skin-subtitle">Normal/combination · Mild T-zone flakiness · Mild acne · Dry lips<br>4 products. Morning + evening. That's it.</div>
+    </div>
+
+    <div class="skin-products-bar">
+      <div class="skin-products-bar-title">Your Products</div>
+      <div class="skin-products-grid">
+        <div class="skin-product-row"><span class="product-pill pill-cleanser">Cleanser</span>CeraVe Hydrating Facial Cleanser — ~$18</div>
+        <div class="skin-product-row"><span class="product-pill pill-moisturizer">Moisturizer</span>CeraVe PM Facial Moisturizing Lotion — ~$22</div>
+        <div class="skin-product-row"><span class="product-pill pill-exfoliant">Exfoliant</span>The Ordinary Salicylic Acid 2% Solution — ~$10</div>
+        <div class="skin-product-row"><span class="product-pill pill-lips">Lips</span>Aquaphor Lip Repair — ~$10</div>
+      </div>
+    </div>
+
+    <div class="skin-day-tabs">
+      <button class="skin-day-tab" id="sk-sun" onclick="showSkinDay('sun', this)">Sun</button>
+      <button class="skin-day-tab" id="sk-mon" onclick="showSkinDay('mon', this)">Mon</button>
+      <button class="skin-day-tab" id="sk-tue" onclick="showSkinDay('tue', this)">Tue</button>
+      <button class="skin-day-tab" id="sk-wed" onclick="showSkinDay('wed', this)">Wed</button>
+      <button class="skin-day-tab" id="sk-thu" onclick="showSkinDay('thu', this)">Thu</button>
+      <button class="skin-day-tab" id="sk-fri" onclick="showSkinDay('fri', this)">Fri</button>
+      <button class="skin-day-tab" id="sk-sat" onclick="showSkinDay('sat', this)">Sat</button>
+    </div>
+
+    <div id="skin-day-views"></div>
+
+    <div class="skin-rules">
+      <div class="skin-rules-title">The Rules</div>
+      <div class="skin-rule"><div class="skin-rule-icon">🔄</div><div class="skin-rule-text"><strong>Consistency over perfection.</strong> A basic routine done every day beats a perfect routine done sometimes. Even just washing and moisturizing counts.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">⚠️</div><div class="skin-rule-text"><strong>Salicylic acid = evening only, T-zone only.</strong> Never all over your face, never in the morning. More is not better.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">🚫</div><div class="skin-rule-text"><strong>Stop licking your lips.</strong> Every lick makes them drier. When you feel the urge, apply Aquaphor instead.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">🤲</div><div class="skin-rule-text"><strong>Don't touch your face.</strong> Hands transfer oil and bacteria directly to your pores — #1 cause of new pimples.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">💧</div><div class="skin-rule-text"><strong>Lukewarm water only.</strong> Hot water strips your skin's natural oils. Cold doesn't cleanse well. Lukewarm is the sweet spot.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">⏳</div><div class="skin-rule-text"><strong>Give it 4-6 weeks.</strong> Skin cell turnover takes ~4 weeks. T-zone flaking, mild acne, and lip dryness should all be noticeably better by then.</div></div>
+      <div class="skin-rule"><div class="skin-rule-icon">✈️</div><div class="skin-rule-text"><strong>Traveling?</strong> Bring cleanser, moisturizer and Aquaphor. Leave salicylic acid at home. A simplified routine for a week is completely fine.</div></div>
+    </div>
+
+  </div><!-- end section-skin -->
+
+
+  <!-- WORKOUT SECTION -->
+  <div class="section" id="section-workout">
+    <div class="section-workout" style="padding:0;">
+<div class="container">
+
+  <header>
+    <div class="header-tag">// workout system</div>
+    <h1>BUILD<br><span>LEAN</span></h1>
+    <div class="subtitle">Hybrid calisthenics + dumbbells · 5 days/week · Home · No noise</div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val">5</div><div class="stat-label">Days/week</div></div>
+    <div class="stat"><div class="stat-val">50</div><div class="stat-label">Max mins</div></div>
+    <div class="stat"><div class="stat-val">20-30</div><div class="stat-label">Dumbbell lbs</div></div>
+    <div class="stat"><div class="stat-val">155</div><div class="stat-label">Bodyweight</div></div>
+  </div>
+
+  <div class="equip-bar">
+    <div class="equip-label">Equipment</div>
+    <div class="equip-tag">20lb Dumbbells</div>
+    <div class="equip-tag">25lb Dumbbells</div>
+    <div class="equip-tag">30lb Dumbbells</div>
+    <div class="equip-tag">Pull-up bar</div>
+    <div class="equip-tag">Bodyweight</div>
+  </div>
+
+  <div class="day-tabs">
+    <button class="day-tab active" onclick="showWorkoutDay('mon', this)">Mon</button>
+    <button class="day-tab" onclick="showWorkoutDay('tue', this)">Tue</button>
+    <button class="day-tab" onclick="showWorkoutDay('wed', this)">Wed</button>
+    <button class="day-tab" onclick="showWorkoutDay('thu', this)">Thu</button>
+    <button class="day-tab" onclick="showWorkoutDay('fri', this)">Fri</button>
+  </div>
+
+  <!-- ── MONDAY: PUSH ──────────────────────────────── -->
+  <div class="day-view active" id="day-mon">
+    <div class="day-header">
+      <div>
+        <div class="day-name">Monday</div>
+        <div class="day-focus">Push — Chest · Shoulders · Triceps</div>
+      </div>
+      <div class="day-meta">
+        <div class="day-time">50</div>
+        <div class="day-time-label">minutes</div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Warm-up — 5 min</div>
+    <div class="exercises">
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">Arm circles + shoulder rolls</div>
+          <div class="ex-sets">30 sec each direction</div>
+          <div class="ex-desc">Loosen the shoulder joints before pressing. Small circles → big circles → rolls.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">—</div><div class="ex-rest-label">rest</div></div>
+      </div>
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">Knee Push-ups or Easy Push-ups</div>
+          <div class="ex-sets">2 × 10 — light, slow, controlled</div>
+          <div class="ex-desc">Just warming up the chest and triceps. Don't go to failure.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">30s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Main Work — ~40 min</div>
+    <div class="exercises">
+
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">1</div>
+        <div class="ex-body">
+          <div class="ex-name">Push-ups <span class="ex-badge badge-bw">Bodyweight</span> <span class="ex-badge badge-key">Key</span></div>
+          <div class="ex-sets">4 × max reps (aim 15-25)</div>
+          <div class="ex-desc">Hands slightly wider than shoulders, elbows at 45°, chest touches floor. Full range of motion every rep. When you can hit 25 clean reps, elevate your feet.</div>
+          <div class="ex-tip">⚡ This is your main chest builder. Don't rush reps — 2 sec down, 1 sec up.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="superset-label">Superset A — do both back to back, then rest</div>
+
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">2A</div>
+        <div class="ex-body">
+          <div class="ex-name">Dumbbell Shoulder Press <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 10-12 · use 20s or 25s</div>
+          <div class="ex-desc">Seated or standing. Start at ear height, press directly overhead, don't lock elbows fully. Control the descent.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">0s</div><div class="ex-rest-label">go to 2B</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">2B</div>
+        <div class="ex-body">
+          <div class="ex-name">Lateral Raises <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 12-15 · use 20s</div>
+          <div class="ex-desc">Slight bend in elbows, raise to shoulder height only. Lead with your elbows not your wrists. Slow and controlled — this is a shoulder width builder.</div>
+          <div class="ex-tip">⚡ Lateral raises are what creates the wide shoulder look. Don't skip these.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="superset-label">Superset B — do both back to back, then rest</div>
+
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">3A</div>
+        <div class="ex-body">
+          <div class="ex-name">Dumbbell Chest Fly <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 12 · use 20s or 25s</div>
+          <div class="ex-desc">Lie on floor. Arms wide with slight elbow bend, bring dumbbells together above chest in a hugging motion. Feel the stretch at the bottom. Floor limits range but protects shoulders.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">0s</div><div class="ex-rest-label">go to 3B</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">3B</div>
+        <div class="ex-body">
+          <div class="ex-name">Diamond Push-ups <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × 10-15</div>
+          <div class="ex-desc">Hands form a diamond shape under your chest. Elbows stay close to your body. Hits inner chest and triceps hard.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-push"></div>
+        <div class="ex-num">4</div>
+        <div class="ex-body">
+          <div class="ex-name">Tricep Dips <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × 12-15 · use a chair or floor</div>
+          <div class="ex-desc">Hands on chair edge behind you, feet extended. Lower yourself until elbows reach 90°, press back up. Keep your back close to the chair. Builds the horseshoe tricep shape.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">45s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+    </div>
+
+    <div class="phase-bar">Finisher — 5 min</div>
+    <div class="exercises">
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">Push-up Hold (bottom position) <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × 20-30 sec hold</div>
+          <div class="ex-desc">Go down to the bottom of a push-up and hold. Brutal chest and core burn. Rest 20s between holds.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">20s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TUESDAY: PULL ──────────────────────────────── -->
+  <div class="day-view" id="day-tue">
+    <div class="day-header">
+      <div>
+        <div class="day-name">Tuesday</div>
+        <div class="day-focus">Pull — Back · Biceps · Rear Delts</div>
+      </div>
+      <div class="day-meta">
+        <div class="day-time">50</div>
+        <div class="day-time-label">minutes</div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Warm-up — 5 min</div>
+    <div class="exercises">
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">Dead hangs from pull-up bar</div>
+          <div class="ex-sets">2 × 20-30 sec</div>
+          <div class="ex-desc">Just hang. Decompresses the spine, warms up grip and shoulder joints. Let your lats stretch.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">30s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Main Work — ~40 min</div>
+    <div class="exercises">
+
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">1</div>
+        <div class="ex-body">
+          <div class="ex-name">Pull-ups <span class="ex-badge badge-bw">Bodyweight</span> <span class="ex-badge badge-key">Key</span></div>
+          <div class="ex-sets">4 × max reps (aim 6-12)</div>
+          <div class="ex-desc">Overhand grip, slightly wider than shoulders. Start from a dead hang, pull until chin clears the bar, lower slowly. If you can't do full pull-ups yet, do negatives — jump to the top, lower yourself as slowly as possible (5-8 sec).</div>
+          <div class="ex-tip">⚡ Pull-ups build the V-taper that makes you look lean. This is the most important exercise in the whole program.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">90s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">2</div>
+        <div class="ex-body">
+          <div class="ex-name">Chin-ups <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × max reps</div>
+          <div class="ex-desc">Underhand grip, shoulder width. Same movement but biceps do more work here. These build the bicep peak that gives you the arm look you want.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">90s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="superset-label">Superset A — do both back to back, then rest</div>
+
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">3A</div>
+        <div class="ex-body">
+          <div class="ex-name">Dumbbell Row <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 10-12 each side · use 25s or 30s</div>
+          <div class="ex-desc">One hand and knee on a surface for support. Other hand rows the dumbbell from straight arm up to hip height. Elbow brushes past your side. Don't rotate your torso.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">0s</div><div class="ex-rest-label">go to 3B</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">3B</div>
+        <div class="ex-body">
+          <div class="ex-name">Dumbbell Rear Delt Fly <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 12-15 · use 20s</div>
+          <div class="ex-desc">Hinge forward at the hips until your torso is near parallel to the floor. Arms hang down, raise them out to the sides leading with your elbows. Builds the rear shoulder that makes you look 3D from the side.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">4</div>
+        <div class="ex-body">
+          <div class="ex-name">Dumbbell Bicep Curl <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 12 · use 20s or 25s</div>
+          <div class="ex-desc">Standing, palms forward. Curl both dumbbells together or alternate. Don't swing your back. Full extension at the bottom, full squeeze at the top. Twist your pinky up at the top for maximum bicep contraction.</div>
+          <div class="ex-tip">⚡ For the forearm look: keep your wrists neutral during the lift — don't let them curl inward.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">45s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">5</div>
+        <div class="ex-body">
+          <div class="ex-name">Hammer Curl <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 12 · use 20s or 25s</div>
+          <div class="ex-desc">Palms facing each other (like holding a hammer). This specifically targets the brachialis and forearm muscles — the two things that make forearms look thick and veiny. Alternate arms.</div>
+          <div class="ex-tip">⚡ This is your forearm exercise. Don't skip it.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">45s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+    </div>
+
+    <div class="phase-bar">Finisher — 5 min</div>
+    <div class="exercises">
+      <div class="ex">
+        <div class="ex-left c-pull"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">Dead Hang Hold</div>
+          <div class="ex-sets">3 × max time</div>
+          <div class="ex-desc">Just hang from the bar as long as possible. Builds grip strength and forearm size directly. Rest 30s between hangs.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">30s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEDNESDAY: LEGS + CORE ────────────────────── -->
+  <div class="day-view" id="day-wed">
+    <div class="day-header">
+      <div>
+        <div class="day-name">Wednesday</div>
+        <div class="day-focus">Legs + Core — Quads · Hamstrings · Glutes · Abs</div>
+      </div>
+      <div class="day-meta">
+        <div class="day-time">50</div>
+        <div class="day-time-label">minutes</div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Warm-up — 5 min</div>
+    <div class="exercises">
+      <div class="ex">
+        <div class="ex-left c-legs"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">Bodyweight squats + hip circles</div>
+          <div class="ex-sets">10 squats + 10 hip circles each side</div>
+          <div class="ex-desc">Deep bodyweight squats, no weight. Warm up the knee and hip joints before loading them.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">—</div><div class="ex-rest-label">rest</div></div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Main Work — ~40 min</div>
+    <div class="exercises">
+
+      <div class="ex">
+        <div class="ex-left c-legs"></div>
+        <div class="ex-num">1</div>
+        <div class="ex-body">
+          <div class="ex-name">Goblet Squat <span class="ex-badge badge-db">Dumbbells</span> <span class="ex-badge badge-key">Key</span></div>
+          <div class="ex-sets">4 × 12-15 · hold one 25lb or 30lb dumbbell</div>
+          <div class="ex-desc">Hold one dumbbell vertically at your chest. Feet shoulder-width, toes slightly out. Squat deep — thighs parallel or below. Chest up, knees track over toes. This builds quads, glutes, and core stability.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-legs"></div>
+        <div class="ex-num">2</div>
+        <div class="ex-body">
+          <div class="ex-name">Romanian Deadlift <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">4 × 10-12 · use 25s or 30s</div>
+          <div class="ex-desc">Hold dumbbells in front of thighs. Hinge at hips — push them back as you lower the weights down your legs. Feel the hamstring stretch. Drive hips forward to stand. Keep back flat the entire time.</div>
+          <div class="ex-tip">⚡ Hamstrings + glutes. This is what builds the back of the leg. Essential for strong legs that look good from behind.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-legs"></div>
+        <div class="ex-num">3</div>
+        <div class="ex-body">
+          <div class="ex-name">Bulgarian Split Squat <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 10 each leg · use 20s or 25s</div>
+          <div class="ex-desc">Rear foot elevated on a chair, front foot forward. Lower your back knee toward the floor. Most of the weight is on the front leg. Brutal quad and glute isolation. Hard exercise — take your time to learn it.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="superset-label">Superset A — Core Circuit</div>
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">4A</div>
+        <div class="ex-body">
+          <div class="ex-name">Plank <span class="ex-badge badge-core">Core</span></div>
+          <div class="ex-sets">3 × 45-60 sec hold</div>
+          <div class="ex-desc">Forearms on floor, body straight from head to heel. Squeeze your abs, glutes and quads simultaneously. Don't let your hips sag or pike up.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">0s</div><div class="ex-rest-label">go to 4B</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">4B</div>
+        <div class="ex-body">
+          <div class="ex-name">Hanging Knee Raises <span class="ex-badge badge-core">Core</span> <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × 15-20</div>
+          <div class="ex-desc">Hang from pull-up bar. Raise knees to chest, lower slowly. Don't swing. This is the best ab exercise you can do for the lower abs — the part that shows first when you lean out.</div>
+          <div class="ex-tip">⚡ Progress to straight leg raises when this gets easy.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">0s</div><div class="ex-rest-label">go to 4C</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">4C</div>
+        <div class="ex-body">
+          <div class="ex-name">Bicycle Crunches <span class="ex-badge badge-core">Core</span></div>
+          <div class="ex-sets">3 × 20 (each side)</div>
+          <div class="ex-desc">On your back, hands behind head, legs off floor. Bring opposite elbow to opposite knee in a twisting motion. Slow and controlled — feel the oblique contraction. These build the side abs that frame the six-pack.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-legs"></div>
+        <div class="ex-num">5</div>
+        <div class="ex-body">
+          <div class="ex-name">Calf Raises <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × 25-30 · slow tempo</div>
+          <div class="ex-desc">Stand on the edge of a step or flat floor. Rise up on your toes fully, hold 1 sec, lower slowly. Calves respond to high reps. Hold dumbbells for extra resistance when this gets easy.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">30s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── THURSDAY: CORE + CONDITIONING ────────────── -->
+  <div class="day-view" id="day-thu">
+    <div class="day-header">
+      <div>
+        <div class="day-name">Thursday</div>
+        <div class="day-focus">Core + Conditioning — Abs · Cardio · Mobility</div>
+      </div>
+      <div class="day-meta">
+        <div class="day-time">40</div>
+        <div class="day-time-label">minutes</div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Warm-up — 3 min</div>
+    <div class="exercises">
+      <div class="ex">
+        <div class="ex-left c-cond"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">Jumping jacks + high knees</div>
+          <div class="ex-sets">30 sec each × 3 rounds</div>
+          <div class="ex-desc">Get your heart rate up and body temperature raised. Move fast but stay quiet on the landings — soft knees, balls of feet.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">—</div><div class="ex-rest-label">rest</div></div>
+      </div>
+    </div>
+
+    <div class="phase-bar">Core Circuit — 3 rounds, minimal rest between exercises</div>
+    <div class="exercises">
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">1</div>
+        <div class="ex-body">
+          <div class="ex-name">Hollow Body Hold <span class="ex-badge badge-core">Core</span> <span class="ex-badge badge-key">Key</span></div>
+          <div class="ex-sets">3 × 30-45 sec</div>
+          <div class="ex-desc">Lie on back, arms overhead, legs straight. Press lower back into floor and lift shoulders and legs slightly off the ground. Hold. This is the foundation of calisthenic ab strength.</div>
+          <div class="ex-tip">⚡ The hollow body is what gives gymnasts and calisthenics athletes their sharp flat-looking abs.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">15s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">2</div>
+        <div class="ex-body">
+          <div class="ex-name">Hanging Leg Raises <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × 10-15</div>
+          <div class="ex-desc">Hang from bar, keep legs straight, raise them to 90° or higher. Lower controlled. If too hard start with bent knees. This is progression from Tuesday's knee raises.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">15s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">3</div>
+        <div class="ex-body">
+          <div class="ex-name">Ab Wheel / Plank Walk-out <span class="ex-badge badge-core">Core</span></div>
+          <div class="ex-sets">3 × 10-12</div>
+          <div class="ex-desc">No ab wheel? Do a plank walk-out instead — from a plank, walk hands forward as far as possible, walk back. Keep hips low. Brutal full-core exercise.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">15s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">4</div>
+        <div class="ex-body">
+          <div class="ex-name">Side Plank <span class="ex-badge badge-core">Core</span></div>
+          <div class="ex-sets">3 × 30 sec each side</div>
+          <div class="ex-desc">Forearm on floor, body in a straight line. Hips up, don't let them drop. Builds the obliques that create the tapered waist look.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">30s</div><div class="ex-rest-label">after each round</div></div>
+      </div>
+
+    </div>
+
+    <div class="phase-bar">Conditioning Finisher — 10 min EMOM</div>
+    <div class="exercises">
+      <div class="ex">
+        <div class="ex-left c-cond"></div>
+        <div class="ex-num">—</div>
+        <div class="ex-body">
+          <div class="ex-name">EMOM — Every Minute on the Minute</div>
+          <div class="ex-sets">10 rounds · alternate A and B</div>
+          <div class="ex-desc">Set a timer for 10 min. Odd minutes: 15 burpees. Even minutes: 20 mountain climbers. Rest for the remainder of each minute. This burns calories, builds conditioning, and keeps the heart rate high — essential for the lean look.</div>
+          <div class="ex-tip">⚡ Land softly on burpees — balls of feet, bent knees. Your family won't hear a thing.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">varies</div><div class="ex-rest-label">rest</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FRIDAY: ARMS + UPPER ──────────────────────── -->
+  <div class="day-view" id="day-fri">
+    <div class="day-header">
+      <div>
+        <div class="day-name">Friday</div>
+        <div class="day-focus">Arms + Upper Body Pump</div>
+      </div>
+      <div class="day-meta">
+        <div class="day-time">30</div>
+        <div class="day-time-label">minutes</div>
+      </div>
+    </div>
+
+    <div class="phase-bar">No warm-up needed — short day, start lighter and ramp up</div>
+    <div class="exercises">
+
+      <div class="superset-label">Superset A — Bicep + Tricep</div>
+
+      <div class="ex">
+        <div class="ex-left c-arms"></div>
+        <div class="ex-num">1A</div>
+        <div class="ex-body">
+          <div class="ex-name">Dumbbell Curl <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 15 · use 20s</div>
+          <div class="ex-desc">Both arms together. Slow on the way down — 3 seconds. The negative is where the muscle grows.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">0s</div><div class="ex-rest-label">go to 1B</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-arms"></div>
+        <div class="ex-num">1B</div>
+        <div class="ex-body">
+          <div class="ex-name">Tricep Dips <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">3 × 15</div>
+          <div class="ex-desc">Chair dips. Full range. Elbows should point straight back, not flare out.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">45s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="superset-label">Superset B — Forearms + Shoulders</div>
+
+      <div class="ex">
+        <div class="ex-left c-arms"></div>
+        <div class="ex-num">2A</div>
+        <div class="ex-body">
+          <div class="ex-name">Hammer Curl <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 15 · use 20s or 25s</div>
+          <div class="ex-desc">Palms facing in. Targets brachialis and forearms. Alternate arms.</div>
+          <div class="ex-tip">⚡ Forearm day. These are what build the forearm thickness you want.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">0s</div><div class="ex-rest-label">go to 2B</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-arms"></div>
+        <div class="ex-num">2B</div>
+        <div class="ex-body">
+          <div class="ex-name">Lateral Raises <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">3 × 15 · use 20s</div>
+          <div class="ex-desc">Reinforce shoulder width. Lead with elbows, raise to shoulder height only.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">45s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-arms"></div>
+        <div class="ex-num">3</div>
+        <div class="ex-body">
+          <div class="ex-name">Chin-ups — max effort <span class="ex-badge badge-bw">Bodyweight</span></div>
+          <div class="ex-sets">2 × max reps</div>
+          <div class="ex-desc">End the week with a max effort set. Whatever you have left in the tank. Underhand grip. Full range.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">60s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+      <div class="ex">
+        <div class="ex-left c-core"></div>
+        <div class="ex-num">4</div>
+        <div class="ex-body">
+          <div class="ex-name">Wrist Curls + Reverse Wrist Curls <span class="ex-badge badge-db">Dumbbells</span></div>
+          <div class="ex-sets">2 × 20 each · use 20s</div>
+          <div class="ex-desc">Sit on the edge of a chair, forearm on your thigh, wrist hanging off the knee. Curl the dumbbell up with just your wrist. Then flip over and reverse curl. Directly builds forearm size and those visible forearm tendons.</div>
+          <div class="ex-tip">⚡ This is the hidden forearm exercise. Most people skip it. Don't.</div>
+        </div>
+        <div class="ex-rest"><div class="ex-rest-val">30s</div><div class="ex-rest-label">rest</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Rules -->
+  <div class="rules">
+    <div class="rules-title">The Rules</div>
+
+    <div class="rule">
+      <div class="rule-icon">📈</div>
+      <div class="rule-text"><strong>Progressive overload every week.</strong> Add 1 more rep per set, or move up a dumbbell weight. If you do the same thing every week you won't change. Your body adapts fast.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">🐢</div>
+      <div class="rule-text"><strong>Slow on the way down.</strong> The eccentric (lowering) phase is where most muscle damage happens, and that's what triggers growth. 2-3 seconds down on every rep.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">🔥</div>
+      <div class="rule-text"><strong>Last 2 reps should be hard.</strong> If the last 2 reps of a set feel easy, the weight is too light or the reps are too few. You need to be working close to failure to grow.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">😴</div>
+      <div class="rule-text"><strong>Sleep is when you grow.</strong> You break muscle down in the gym. You build it during sleep. 7-8 hours is not optional if you want results.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">🤸</div>
+      <div class="rule-text"><strong>Form over weight, always.</strong> Especially at 5am. A sloppy rep with heavy weight does nothing. A clean rep with lighter weight builds muscle and prevents injury.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">📅</div>
+      <div class="rule-text"><strong>Consistency over intensity.</strong> 3 months of showing up every day beats 1 week of going too hard and burning out. The program only works if you actually do it.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">🪞</div>
+      <div class="rule-text"><strong>Results take 8-12 weeks to show.</strong> The first 4 weeks is your nervous system learning. Week 8 onward is when your body starts to visibly change. Don't quit before then.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showDay(day, btn) {
+  document.querySelectorAll('.day-view').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('day-' + day).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+    </div>
+  </div><!-- end section-workout -->
+
+  <!-- BUDGET SECTION -->
+  <div class="section" id="section-budget">
+    <div class="section-budget" style="padding:0;">
+<div class="nav">
+  <button class="nav-btn active" onclick="showBudgetView('overview')">Overview</button>
+  <button class="nav-btn" onclick="showBudgetView('log')">+ Log</button>
+  <button class="nav-btn" onclick="showBudgetView('plex')">🏠 Plex</button>
+  <button class="nav-btn" onclick="showBudgetView('savings')">💰 Savings</button>
+</div>
+
+<!-- ════════════════════════════════
+     OVERVIEW
+     ════════════════════════════════ -->
+<div class="view active" id="view-overview">
+  <div class="page-title">This Month</div>
+  <div class="page-sub" id="overview-month">Loading...</div>
+
+  <!-- Monthly income bar -->
+  <div class="card" style="margin-bottom:8px;">
+    <div class="card-row">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Monthly Allowance</div>
+        <div class="big-num" style="font-size:32px;color:var(--accent);">$400</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">LEFT TO SPEND</div>
+        <div class="big-num" style="font-size:28px;" id="overview-left">—</div>
+      </div>
+    </div>
+    <div class="prog-wrap" style="margin-top:12px;">
+      <div class="prog-fill prog-ok" id="overview-prog" style="width:0%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;">
+      <span id="overview-spent-label">$0 spent</span>
+      <span>$400 budget</span>
+    </div>
+  </div>
+
+  <!-- Budget categories -->
+  <div class="section-label">Categories</div>
+  <div id="category-rows">
+    <div class="loading">Loading...</div>
+  </div>
+
+  <!-- Reset month button -->
+  <div style="margin-top:16px;">
+    <div id="reset-confirm" style="display:none;background:var(--red-dim);border:1px solid var(--red-border);border-radius:8px;padding:14px;margin-bottom:8px;">
+      <div style="font-size:13px;color:var(--red);margin-bottom:10px;font-weight:500;">Clear all this month's expenses? Savings are not affected.</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-danger" style="flex:1;" onclick="doReset()">Yes, reset month</button>
+        <button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('reset-confirm').style.display='none'">Cancel</button>
+      </div>
+    </div>
+    <button class="btn btn-ghost" style="width:100%;" onclick="document.getElementById('reset-confirm').style.display='block'">↺ New Month Reset</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     LOG
+     ════════════════════════════════ -->
+<div class="view" id="view-log">
+  <div class="page-title">Log a Purchase</div>
+  <div class="page-sub">Tap a category, enter the amount</div>
+
+  <div class="log-form">
+    <div class="form-row">
+      <input class="inp" id="log-amount" type="number" placeholder="$0.00" step="0.01" min="0">
+      <select class="inp" id="log-cat">
+        <option value="">— Category —</option>
+        <option value="personal">💊 Personal Care</option>
+        <option value="food">🍕 Food Out</option>
+        <option value="entertainment">🎮 Entertainment</option>
+        <option value="other">📦 Other</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <button class="btn btn-primary" style="flex:1;" onclick="logExpense()">Add Expense</button>
+    </div>
+  </div>
+
+  <div id="log-notice"></div>
+
+  <div class="section-label">This Month's Expenses</div>
+  <div id="tx-list">
+    <div class="loading">Loading...</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PLEX GOAL
+     ════════════════════════════════ -->
+<div class="view" id="view-plex">
+  <div class="page-title">Plex Goal</div>
+  <div class="page-sub">Owner-occupied · Dad matches your savings · 5% or 10% down</div>
+
+  <div style="margin-bottom:12px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Your plex savings total</div>
+    <div class="big-num" style="font-size:40px;color:var(--accent);" id="plex-savings-display">$0</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;" id="plex-dad-display">Dad matches: $0 → Total: $0</div>
+  </div>
+
+  <!-- Scenario A: Duplex -->
+  <div class="plex-scenario">
+    <div class="plex-tag">Scenario A — Duplex (2 units)</div>
+    <div class="plex-title">$250,000 · 5% down · You live in 1 unit</div>
+    <div class="plex-stat-row"><span class="plex-stat-label">Down payment needed</span><span class="plex-stat-val" style="color:var(--gold)">$12,500</span></div>
+    <div class="plex-stat-row"><span class="plex-stat-label">Your share (50%)</span><span class="plex-stat-val" style="color:var(--gold)">$6,250</span></div>
+    <div class="plex-stat-row"><span class="plex-stat-label">You have saved</span><span class="plex-stat-val" style="color:var(--accent)" id="plex-a-saved">$0</span></div>
+    <div class="plex-stat-row"><span class="plex-stat-label">Still needed</span><span class="plex-stat-val" id="plex-a-needed">$6,250</span></div>
+    <div class="prog-wrap" style="margin-top:12px;">
+      <div class="prog-fill prog-ok" id="plex-a-bar" style="width:0%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;">
+      <span id="plex-a-pct">0% there</span>
+      <span>Goal: $6,250</span>
+    </div>
+    <div id="plex-a-notice" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- Scenario B: Triplex -->
+  <div class="plex-scenario">
+    <div class="plex-tag">Scenario B — Triplex (3 units)</div>
+    <div class="plex-title">$350,000 · 10% down · You live in 1 unit</div>
+    <div class="plex-stat-row"><span class="plex-stat-label">Down payment needed</span><span class="plex-stat-val" style="color:var(--gold)">$35,000</span></div>
+    <div class="plex-stat-row"><span class="plex-stat-label">Your share (50%)</span><span class="plex-stat-val" style="color:var(--gold)">$17,500</span></div>
+    <div class="plex-stat-row"><span class="plex-stat-label">You have saved</span><span class="plex-stat-val" style="color:var(--accent)" id="plex-b-saved">$0</span></div>
+    <div class="plex-stat-row"><span class="plex-stat-label">Still needed</span><span class="plex-stat-val" id="plex-b-needed">$17,500</span></div>
+    <div class="prog-wrap" style="margin-top:12px;">
+      <div class="prog-fill prog-ok" id="plex-b-bar" style="width:0%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;">
+      <span id="plex-b-pct">0% there</span>
+      <span>Goal: $17,500</span>
+    </div>
+    <div id="plex-b-notice" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- Projection -->
+  <div class="card" style="margin-top:4px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">At current monthly saving rate</div>
+    <div id="plex-projection" style="font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;">Log savings deposits to see projections.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     SAVINGS
+     ════════════════════════════════ -->
+<div class="view" id="view-savings">
+  <div class="page-title">Savings Tracker</div>
+  <div class="page-sub">Manually log every deposit you make toward the plex</div>
+
+  <div class="savings-total-box">
+    <div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Total Plex Savings</div>
+      <div class="big-num" style="font-size:36px;color:var(--accent);" id="savings-total">$0</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;">Dad matches</div>
+      <div class="big-num" style="font-size:24px;color:var(--gold);" id="savings-dad">$0</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;">Combined: <span id="savings-combined" style="color:var(--text);">$0</span></div>
+    </div>
+  </div>
+
+  <!-- Deposit form -->
+  <div class="log-form">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Log a Deposit</div>
+    <div class="form-row">
+      <input class="inp" id="dep-amount" type="number" placeholder="Amount deposited ($)" step="0.01" min="0">
+      <button class="btn btn-gold" onclick="logDeposit()">Save</button>
+    </div>
+  </div>
+
+  <div id="dep-notice"></div>
+
+  <div class="section-label">Deposit History</div>
+  <div id="dep-list">
+    <div class="loading">Loading...</div>
+  </div>
+</div>
+
+
+    </div>
+  </div><!-- end section-budget -->
+
+
+  <!-- NUTRITION SECTION -->
+  <div class="section" id="section-nutrition">
+    <div class="section-nutrition" style="padding:0;">
+<div class="container">
+
+  <header>
+    <div class="header-tag">// nutrition system</div>
+    <h1>EAT TO<br><em>BUILD</em></h1>
+    <div class="subtitle">5'7" · 155 lbs · Lean + muscular goal · Parents cook · You control breakfast & snacks</div>
+  </header>
+
+  <div class="numbers-strip">
+    <div class="num-card"><div class="num-val">2500</div><div class="num-label">Cal / day</div></div>
+    <div class="num-card"><div class="num-val protein">140g</div><div class="num-label">Protein / day</div></div>
+    <div class="num-card"><div class="num-val warm">3L</div><div class="num-label">Water / day</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showNutritionView('breakfast', this)">🍳 Breakfast</button>
+    <button class="tab" onclick="showNutritionView('snacks', this)">🥜 Snacks</button>
+    <button class="tab" onclick="showNutritionView('meals', this)">🍽️ Main Meals</button>
+    <button class="tab" onclick="showNutritionView('protein', this)">💪 Protein</button>
+    <button class="tab" onclick="showNutritionView('rules', this)">📋 Rules</button>
+  </div>
+
+  <!-- ══════════════════════════
+       BREAKFAST
+       ══════════════════════════ -->
+  <div class="view active" id="view-breakfast">
+
+    <div class="info-card" style="margin-bottom:16px;">
+      <div class="info-card-title">⚡ The Situation</div>
+      <div class="info-card-body">You wake up at 5am, workout from 5:10–6:00, then have until 6:30 before leaving or starting your day. Breakfast needs to be <strong>fast, high protein, and require zero thinking at 5am</strong>. Eggs are your best friend here — 3 eggs = 18g protein in under 5 minutes.</div>
+    </div>
+
+    <div class="section-label">Option A — The Daily Default (5 min)</div>
+
+    <div class="meal-card">
+      <div class="meal-header">
+        <div class="meal-emoji">🍳</div>
+        <div class="meal-title">3-Egg Scramble</div>
+        <div class="meal-meta">
+          <span class="meal-tag tag-protein">~35g protein</span>
+          <span class="meal-tag tag-fast">5 min</span>
+        </div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-item">
+          <div class="meal-item-dot"></div>
+          <div>
+            <div class="meal-item-name">3 whole eggs</div>
+            <div class="meal-item-detail">Scrambled or fried. Whole eggs — the yolk has half the protein and all the good fats. Don't skip it.</div>
+          </div>
+          <div class="meal-item-protein">18g</div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot warm"></div>
+          <div>
+            <div class="meal-item-name">2 slices of toast or rice</div>
+            <div class="meal-item-detail">Carbs refuel you after the workout. Whole grain if available but anything works.</div>
+          </div>
+          <div class="meal-item-protein">~6g</div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot blue"></div>
+          <div>
+            <div class="meal-item-name">Glass of milk (optional)</div>
+            <div class="meal-item-detail">If your parents have it. Easy extra protein with no effort.</div>
+          </div>
+          <div class="meal-item-protein">+8g</div>
+        </div>
+        <div class="meal-tip">💡 Make this your default. 3 eggs every morning = ~18-26g protein before your day even starts. Takes under 5 minutes.</div>
+      </div>
+    </div>
+
+    <div class="section-label">Option B — Faster Days (3 min)</div>
+
+    <div class="meal-card">
+      <div class="meal-header">
+        <div class="meal-emoji">🥚</div>
+        <div class="meal-title">Hard-Boiled Eggs + Toast</div>
+        <div class="meal-meta">
+          <span class="meal-tag tag-protein">~25g protein</span>
+          <span class="meal-tag tag-fast">3 min</span>
+        </div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-item">
+          <div class="meal-item-dot"></div>
+          <div>
+            <div class="meal-item-name">3 hard-boiled eggs (pre-made)</div>
+            <div class="meal-item-detail">Boil a batch of 6-8 on Sunday night. They keep in the fridge for a week. Grab 3, done.</div>
+          </div>
+          <div class="meal-item-protein">18g</div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot warm"></div>
+          <div>
+            <div class="meal-item-name">2 slices of bread with peanut butter</div>
+            <div class="meal-item-detail">If there's peanut butter — adds healthy fat and extra protein. Otherwise just toast.</div>
+          </div>
+          <div class="meal-item-protein">~8g</div>
+        </div>
+        <div class="meal-tip">💡 Prep the eggs on Sunday. Thursday and Friday you leave at 6:30 — hard-boiled eggs mean zero cooking time on those mornings.</div>
+      </div>
+    </div>
+
+    <div class="section-label">Option C — Really rushed (2 min)</div>
+
+    <div class="meal-card">
+      <div class="meal-header">
+        <div class="meal-emoji">🥛</div>
+        <div class="meal-title">Greek Yogurt + Fruit</div>
+        <div class="meal-meta">
+          <span class="meal-tag tag-protein">~20g protein</span>
+          <span class="meal-tag tag-easy">no cooking</span>
+        </div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-item">
+          <div class="meal-item-dot blue"></div>
+          <div>
+            <div class="meal-item-name">Greek yogurt (plain, full fat)</div>
+            <div class="meal-item-detail">Not regular yogurt — Greek yogurt has 2-3x more protein. ~17-20g per cup. Ask your parents to keep some around, it's cheap.</div>
+          </div>
+          <div class="meal-item-protein">18g</div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot warm"></div>
+          <div>
+            <div class="meal-item-name">Banana or any fruit</div>
+            <div class="meal-item-detail">Fast carbs before or after training. Easy to eat on the go.</div>
+          </div>
+          <div class="meal-item-protein">1g</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════
+       SNACKS
+       ══════════════════════════ -->
+  <div class="view" id="view-snacks">
+
+    <div class="info-card" style="margin-bottom:16px;">
+      <div class="info-card-title">🎯 The Strategy</div>
+      <div class="info-card-body">Right now you eat whatever's in the house — chips, random stuff. The goal isn't to eliminate snacking, it's to <strong>replace low-protein snacks with high-protein ones</strong>. You still get to eat, you just choose better options when possible. Ask your parents to keep a few of these around.</div>
+    </div>
+
+    <div class="section-label">Best Snacks — High Protein, Easy</div>
+
+    <div class="snack-grid">
+      <div class="snack-card">
+        <div class="snack-emoji">🥚</div>
+        <div class="snack-name">Hard-boiled eggs</div>
+        <div class="snack-protein">6g per egg</div>
+        <div class="snack-detail">Pre-boil a batch Sunday. Grab 2 any time. Best snack you can have.</div>
+      </div>
+      <div class="snack-card">
+        <div class="snack-emoji">🧀</div>
+        <div class="snack-name">Cheese + crackers</div>
+        <div class="snack-protein">~10g per serving</div>
+        <div class="snack-detail">Almost always available at home. Protein + fat = fills you up.</div>
+      </div>
+      <div class="snack-card">
+        <div class="snack-emoji">🥜</div>
+        <div class="snack-name">Peanut butter on bread</div>
+        <div class="snack-protein">~8g per slice</div>
+        <div class="snack-detail">Cheap, easy, high calorie and protein. Good post-workout snack.</div>
+      </div>
+      <div class="snack-card">
+        <div class="snack-emoji">🫙</div>
+        <div class="snack-name">Greek yogurt</div>
+        <div class="snack-protein">~18g per cup</div>
+        <div class="snack-detail">Single best snack for protein. Ask parents to keep it stocked.</div>
+      </div>
+      <div class="snack-card">
+        <div class="snack-emoji">🥛</div>
+        <div class="snack-name">Glass of milk</div>
+        <div class="snack-protein">8g per glass</div>
+        <div class="snack-detail">Free protein if your parents buy milk. Drink a glass with snacks.</div>
+      </div>
+      <div class="snack-card">
+        <div class="snack-emoji">🍌</div>
+        <div class="snack-name">Banana + peanut butter</div>
+        <div class="snack-protein">~9g total</div>
+        <div class="snack-detail">Great pre or post-workout snack. Fast carbs + protein + fat.</div>
+      </div>
+      <div class="snack-card">
+        <div class="snack-emoji">🥫</div>
+        <div class="snack-name">Canned tuna on crackers</div>
+        <div class="snack-protein">~25g per can</div>
+        <div class="snack-detail">Cheapest and highest protein snack available. Keep cans in your room.</div>
+      </div>
+      <div class="snack-card">
+        <div class="snack-emoji">🍗</div>
+        <div class="snack-name">Leftover chicken / meat</div>
+        <div class="snack-protein">25-30g per 100g</div>
+        <div class="snack-detail">Cold from the fridge is fine. Best use of parent dinner leftovers.</div>
+      </div>
+    </div>
+
+    <div class="section-label">On the commute (school days)</div>
+
+    <div class="info-card">
+      <div class="info-card-title">🚌 Commute snacks</div>
+      <div class="info-card-body">You have 2 hours each way on transit. Pack something small — <strong>a hard-boiled egg, a banana, or peanut butter on bread</strong> in your bag. It stops you from buying garbage at the school cafeteria and keeps your energy up through long study sessions.</div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════
+       MAIN MEALS
+       ══════════════════════════ -->
+  <div class="view" id="view-meals">
+
+    <div class="info-card" style="margin-bottom:16px;">
+      <div class="info-card-title">🍽️ Working With Your Parents' Cooking</div>
+      <div class="info-card-body">You can't control what they make, but you can <strong>control how much of each thing you put on your plate</strong>. The single most useful habit: <span class="green">always prioritize the protein source first</span>. Fill half your plate with the meat/fish, then add the rest. Don't let rice and bread crowd out the chicken.</div>
+    </div>
+
+    <div class="section-label">The Plate Strategy</div>
+
+    <div class="meal-card">
+      <div class="meal-header">
+        <div class="meal-emoji">🍽️</div>
+        <div class="meal-title">How to Build Your Plate</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-item">
+          <div class="meal-item-dot blue"></div>
+          <div>
+            <div class="meal-item-name">½ plate — protein (meat, fish, eggs, legumes)</div>
+            <div class="meal-item-detail">This is your priority. Take a generous portion of whatever meat or protein is being served. Aim for a palm-sized portion minimum — ideally 150-200g cooked.</div>
+          </div>
+          <div class="meal-item-protein">30-40g</div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot"></div>
+          <div>
+            <div class="meal-item-name">¼ plate — vegetables</div>
+            <div class="meal-item-detail">Whatever's being served. Don't skip it — fiber, vitamins, and it fills you up without adding much to your calorie count.</div>
+          </div>
+          <div class="meal-item-protein">2-4g</div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot warm"></div>
+          <div>
+            <div class="meal-item-name">¼ plate — carbs (rice, pasta, bread, potatoes)</div>
+            <div class="meal-item-detail">On workout days eat more of these — your muscles need the fuel. On rest days (Sat/Sun) you can have slightly less.</div>
+          </div>
+          <div class="meal-item-protein">5-8g</div>
+        </div>
+        <div class="meal-tip">💡 Two meals a day from your parents + your breakfast = roughly 80-100g protein before snacks. You close the gap with high protein snacks throughout the day.</div>
+      </div>
+    </div>
+
+    <div class="section-label">The One Thing to Ask Your Parents</div>
+
+    <div class="info-card">
+      <div class="info-card-title">🙏 One Simple Request</div>
+      <div class="info-card-body">You don't need to overhaul their cooking. Just ask them to keep <strong>Greek yogurt, eggs, and peanut butter</strong> stocked. That's it. Those three things alone let you add 40-60g of protein per day without changing anything about how they cook. It's cheap and they'll likely say yes without a second thought.</div>
+    </div>
+
+    <div class="section-label">Workout Day vs Rest Day</div>
+
+    <div class="meal-card">
+      <div class="meal-header">
+        <div class="meal-emoji">💪</div>
+        <div class="meal-title">Workout Days (Mon–Fri)</div>
+        <div class="meal-meta"><span class="meal-tag tag-cal">~2500 cal</span></div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-item">
+          <div class="meal-item-dot blue"></div>
+          <div>
+            <div class="meal-item-name">Eat more carbs</div>
+            <div class="meal-item-detail">Your muscles need glycogen to fuel and recover from training. Don't be afraid of the rice and pasta on training days.</div>
+          </div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot"></div>
+          <div>
+            <div class="meal-item-name">Pre-workout (optional)</div>
+            <div class="meal-item-detail">You train at 5:10am — eating before is optional at that hour. A banana or a glass of milk before the workout is enough if you want something.</div>
+          </div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot warm"></div>
+          <div>
+            <div class="meal-item-name">Post-workout breakfast = most important meal</div>
+            <div class="meal-item-detail">Your body is primed to absorb protein and carbs for about 30-60 minutes after training. This is why breakfast right after your workout matters more than any other meal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal-card">
+      <div class="meal-header">
+        <div class="meal-emoji">😴</div>
+        <div class="meal-title">Rest Days (Sat–Sun)</div>
+        <div class="meal-meta"><span class="meal-tag tag-cal">~2200 cal</span></div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-item">
+          <div class="meal-item-dot"></div>
+          <div>
+            <div class="meal-item-name">Keep protein the same</div>
+            <div class="meal-item-detail">Protein stays at 130-140g even on rest days — your muscles are still repairing and growing from the week's training.</div>
+          </div>
+        </div>
+        <div class="meal-item">
+          <div class="meal-item-dot warm"></div>
+          <div>
+            <div class="meal-item-name">Slightly fewer carbs is fine</div>
+            <div class="meal-item-detail">You're less active so you need slightly less fuel. Don't stress about it — just don't go for thirds on the rice.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════
+       PROTEIN TRACKER
+       ══════════════════════════ -->
+  <div class="view" id="view-protein">
+
+    <div class="info-card" style="margin-bottom:16px;">
+      <div class="info-card-title">💪 Your Daily Protein Target: 140g</div>
+      <div class="info-card-body">At 155 lbs training 5 days a week, <span class="blue">140g protein per day</span> is your sweet spot. Below is what a realistic day looks like hitting that target with your situation — parents cooking 2 meals, you controlling breakfast and snacks.</div>
+    </div>
+
+    <div class="section-label">Sample Day — Hitting 140g</div>
+
+    <div class="protein-day">
+      <div class="pt-row">
+        <div class="pt-meal">Breakfast</div>
+        <div class="pt-food">3 scrambled eggs + toast + milk <span>(~6 min)</span></div>
+        <div class="pt-protein">26g</div>
+      </div>
+      <div class="pt-row">
+        <div class="pt-meal">Snack 1</div>
+        <div class="pt-food">Greek yogurt <span>(from fridge)</span></div>
+        <div class="pt-protein">18g</div>
+      </div>
+      <div class="pt-row">
+        <div class="pt-meal">Lunch</div>
+        <div class="pt-food">Parent meal — prioritize meat <span>(palm-sized portion)</span></div>
+        <div class="pt-protein">35g</div>
+      </div>
+      <div class="pt-row">
+        <div class="pt-meal">Snack 2</div>
+        <div class="pt-food">2 hard-boiled eggs + peanut butter on bread</div>
+        <div class="pt-protein">20g</div>
+      </div>
+      <div class="pt-row">
+        <div class="pt-meal">Dinner</div>
+        <div class="pt-food">Parent meal — prioritize meat <span>(generous portion)</span></div>
+        <div class="pt-protein">35g</div>
+      </div>
+      <div class="pt-row" style="border-bottom:none;">
+        <div class="pt-meal">Evening</div>
+        <div class="pt-food">Glass of milk or small snack <span>(optional)</span></div>
+        <div class="pt-protein">8g</div>
+      </div>
+      <div class="pt-total">
+        <div class="pt-total-label">Daily Total</div>
+        <div class="pt-total-val">142g ✓</div>
+      </div>
+    </div>
+
+    <div class="section-label">Protein by food (quick reference)</div>
+
+    <div class="info-card">
+      <div class="info-card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;">
+        <div>🥚 1 egg = <strong>6g</strong></div>
+        <div>🍗 100g chicken = <strong>31g</strong></div>
+        <div>🥛 1 glass milk = <strong>8g</strong></div>
+        <div>🐟 100g tuna = <strong>25g</strong></div>
+        <div>🫙 1 cup Greek yogurt = <strong>18g</strong></div>
+        <div>🥩 100g beef = <strong>26g</strong></div>
+        <div>🥜 2 tbsp peanut butter = <strong>8g</strong></div>
+        <div>🧀 30g cheese = <strong>7g</strong></div>
+        <div>🍚 1 cup cooked rice = <strong>4g</strong></div>
+        <div>🫘 ½ cup beans = <strong>8g</strong></div>
+      </div>
+    </div>
+
+    <div class="info-card" style="margin-top:8px;background:var(--protein-dim);border-color:var(--protein-border);">
+      <div class="info-card-title" style="color:var(--protein);">📊 The Reality Check</div>
+      <div class="info-card-body">Most people eating a normal diet get about <strong>60-80g protein per day</strong>. Hitting 140g requires intentional effort — you have to consistently choose protein at every meal and snack. The good news is that with eggs for breakfast every day and your parents' balanced meals, you're already halfway there before you even try.</div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════
+       RULES
+       ══════════════════════════ -->
+  <div class="view" id="view-rules">
+    <div class="rules">
+      <div class="rules-title">The Rules</div>
+
+      <div class="rule">
+        <div class="rule-icon">🥚</div>
+        <div class="rule-text"><strong>Eggs every morning, no exceptions.</strong> 3 eggs = 18g protein in 5 minutes. This single habit alone meaningfully changes your results over months.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-icon">🥩</div>
+        <div class="rule-text"><strong>Protein first on every plate.</strong> Before you serve yourself rice or bread, take a generous portion of the meat. It's the same food, just a different order and proportion.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-icon">💧</div>
+        <div class="rule-text"><strong>3 liters of water every day.</strong> Especially on workout days. Get a 1L bottle and refill it 3 times. Being even mildly dehydrated reduces workout performance, energy, and focus — all things you need.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-icon">🚫</div>
+        <div class="rule-text"><strong>Don't skip meals.</strong> You used to skip breakfast regularly. At 5am with a workout done, your body needs fuel. Skipping meals on training days tanks your recovery and muscle growth.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-icon">📦</div>
+        <div class="rule-text"><strong>Pack a snack on school days.</strong> 4 hours of commuting is a long time. A hard-boiled egg or peanut butter bread in your bag prevents energy crashes and stops you from buying junk at school.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-icon">🌙</div>
+        <div class="rule-text"><strong>Eat something before bed on training days.</strong> A glass of milk or some Greek yogurt before sleep gives your muscles protein to repair overnight. It doesn't have to be a full meal.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-icon">🧘</div>
+        <div class="rule-text"><strong>Don't stress about perfect eating.</strong> You eat what your parents make — that's already good food. Focus on <span class="green">nailing your breakfast and snacks</span>. The rest takes care of itself.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-icon">⏳</div>
+        <div class="rule-text"><strong>Results take 8-12 weeks.</strong> Nutrition and training work together but slowly. Don't change everything after 2 weeks because you don't see abs yet. Trust the process.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+    </div>
+  </div><!-- end section-nutrition -->
+
+</div><!-- end app-container -->
+
+<script>
+// ── Section nav ──────────────────────────────────────────────
+const accentMap = { schedule: 'nav-sched', hair: 'nav-hair', skin: 'nav-skin', workout: 'nav-workout', budget: 'nav-budget', nutrition: 'nav-nutrition' };
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  const acc = document.getElementById('nav-accent');
+  acc.className = 'top-nav-accent ' + accentMap[name];
+  document.getElementById('top-nav-select').value = name;
+  if (name === 'skin' && !document.getElementById('skin-day-views').innerHTML) {
+    showSkinDay('sun', document.getElementById('sk-sun'));
+  }
+}
+
+// ── Schedule days ─────────────────────────────────────────────
+function showSchedDay(day, btn) {
+  document.querySelectorAll('.sched-day').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sched-' + day).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Hair care days ────────────────────────────────────────────
+function showHairDay(day, btn) {
+  document.querySelectorAll('.hair-day').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.hair-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(day).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Skin care days ────────────────────────────────────────────
+const skinDays = {
+  sun: { label: 'Sunday',    salicylic: true,  note: 'Hair wash day — do skincare after the hair routine.' },
+  mon: { label: 'Monday',    salicylic: false, note: 'School day — do your evening routine before wind down.' },
+  tue: { label: 'Tuesday',   salicylic: true,  note: 'Home day — plenty of time, no rush.' },
+  wed: { label: 'Wednesday', salicylic: false, note: 'Hair co-wash night — do skincare after the hair routine.' },
+  thu: { label: 'Thursday',  salicylic: true,  note: 'Hair co-wash night — do skincare after the hair routine.' },
+  fri: { label: 'Friday',    salicylic: false, note: "At mom's — bring cleanser, moisturizer and Aquaphor. Leave salicylic acid at home." },
+  sat: { label: 'Saturday',  salicylic: false, note: "At mom's — same as Friday. Simple routine only." },
+};
+
+function skinMorning() {
+  return `
+    <div class="skin-routine-label">Morning — after waking up, takes 2 minutes</div>
+    <div class="skin-step">
+      <div class="skin-step-num">1</div><div class="skin-step-bar bar-cleanser"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Wash your face <span class="product-pill pill-cleanser">Cleanser</span></div>
+        <div class="skin-step-desc">Wet your face with lukewarm water. Apply a small amount of CeraVe Hydrating Facial Cleanser and massage gently in circular motions for 30-60 seconds. Rinse thoroughly and pat dry — never rub.</div>
+        <div class="skin-step-tip info">💡 Pat dry, never rub. Rubbing irritates skin and triggers breakouts.</div>
+      </div>
+    </div>
+    <div class="skin-step">
+      <div class="skin-step-num">2</div><div class="skin-step-bar bar-moisturizer"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Moisturize <span class="product-pill pill-moisturizer">Moisturizer</span></div>
+        <div class="skin-step-desc">Apply CeraVe PM Facial Moisturizing Lotion while your face is still slightly damp. Dot on forehead, cheeks, nose and chin, spread evenly with gentle upward motions. A pea-sized amount per area is enough.</div>
+        <div class="skin-step-tip">✨ Niacinamide in this moisturizer reduces inflammation and pore size over time — helps both T-zone flakiness and mild acne.</div>
+      </div>
+    </div>
+    <div class="skin-step">
+      <div class="skin-step-num">3</div><div class="skin-step-bar bar-lips"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Lip balm <span class="product-pill pill-lips">Lips</span></div>
+        <div class="skin-step-desc">Apply Aquaphor Lip Repair to your lips and slightly beyond the lip line. Don't lick it off.</div>
+        <div class="skin-step-tip warning">⚠️ Stop licking your lips. Every lick makes them drier. Apply Aquaphor instead.</div>
+      </div>
+    </div>`;
+}
+
+function skinEvening(salicylic, note) {
+  const salStep = salicylic ? `
+    <div class="skin-step">
+      <div class="skin-step-num">2</div><div class="skin-step-bar bar-exfoliant"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Salicylic acid — T-zone only <span class="product-pill pill-exfoliant">Exfoliant</span> <span class="freq-badge freq-weekly">Tonight only</span></div>
+        <div class="skin-step-desc">On cleansed, dry skin. Apply The Ordinary Salicylic Acid 2% using a cotton pad or fingertip — only on flaky areas: between eyebrows, sides of nose, chin if needed. Do not apply all over. Wait 1-2 minutes before moisturizing.</div>
+        <div class="skin-step-tip warning">⚠️ T-zone only. Evening only. Never in the morning.</div>
+      </div>
+    </div>` : '';
+
+  const mNum = salicylic ? 3 : 2;
+  const lNum = salicylic ? 4 : 3;
+
+  return `
+    <div class="skin-routine-label">Evening — before bed · ${note}</div>
+    <div class="skin-step">
+      <div class="skin-step-num">1</div><div class="skin-step-bar bar-cleanser"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Wash your face <span class="product-pill pill-cleanser">Cleanser</span></div>
+        <div class="skin-step-desc">Same as morning — lukewarm water, CeraVe, 30-60 seconds gentle massage, rinse, pat dry. Removes the day's sweat, oil and buildup before bed.</div>
+      </div>
+    </div>
+    ${salStep}
+    <div class="skin-step">
+      <div class="skin-step-num">${mNum}</div><div class="skin-step-bar bar-moisturizer"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Moisturize <span class="product-pill pill-moisturizer">Moisturizer</span></div>
+        <div class="skin-step-desc">Same CeraVe PM lotion. Apply while face is slightly damp. Your skin repairs itself while you sleep — 7-8 hours of uninterrupted absorption makes this your most effective application of the day.</div>
+        <div class="skin-step-tip">🌙 Don't skip nighttime moisturizer even if you're tired. It takes 30 seconds.</div>
+      </div>
+    </div>
+    <div class="skin-step">
+      <div class="skin-step-num">${lNum}</div><div class="skin-step-bar bar-lips"></div>
+      <div class="skin-step-body">
+        <div class="skin-step-title">Lip balm <span class="product-pill pill-lips">Lips</span></div>
+        <div class="skin-step-desc">Apply a generous layer of Aquaphor to lips and around them. 8 hours overnight will make a visible difference within a week.</div>
+        <div class="skin-step-tip">💤 More is fine at night. Build up a thick layer and let it work while you sleep.</div>
+      </div>
+    </div>`;
+}
+
+function showSkinDay(key, btn) {
+  const d = skinDays[key];
+  const isSal = d.salicylic;
+  const badgeStyle = isSal
+    ? 'color:#f5a623;background:#f5a62322;border:1px solid #f5a62344;'
+    : 'color:#3dd9b3;background:#3dd9b322;border:1px solid #3dd9b344;';
+  const badgeText = isSal ? '🧴 Salicylic Acid Night' : '✨ Regular Night';
+
+  document.getElementById('skin-day-views').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#eef2f7;">${d.label}</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:100px;white-space:nowrap;flex-shrink:0;font-family:'Nunito',sans-serif;${badgeStyle}">${badgeText}</div>
+    </div>
+    <div class="skin-steps">${skinMorning()}</div>
+    <div class="skin-steps" style="margin-top:6px;">${skinEvening(isSal, d.note)}</div>`;
+
+  document.querySelectorAll('.skin-day-tab').forEach(t => t.classList.remove('active-regular', 'active-sal'));
+  btn.classList.add(isSal ? 'active-sal' : 'active-regular');
+}
+
+// Init
+showSkinDay('sun', document.getElementById('sk-sun'));
+
+// ── NUTRITION JS ──
+function showNutritionView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── WORKOUT JS ──
+function showWorkoutDay(day, btn) {
+  document.querySelectorAll('.day-view').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('day-' + day).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── BUDGET JS ──
+// ─────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────
+const BUDGET = {
+  personal:      { label: 'Personal Care',  emoji: '💊', limit: 40,  color: '#4d9fff' },
+  food:          { label: 'Food Out',        emoji: '🍕', limit: 50,  color: '#f0c040' },
+  entertainment: { label: 'Entertainment',   emoji: '🎮', limit: 50,  color: '#c084fc' },
+  other:         { label: 'Other',           emoji: '📦', limit: 60,  color: '#94a3b8' },
+};
+
+const MONTHLY_INCOME = 400;
+
+let state = {
+  expenses: [],      // { id, amount, cat, date }
+  deposits: [],      // { id, amount, date }
+  plexTotal: 0,      // sum of all deposits ever
+};
+
+// ─────────────────────────────────────────────────
+// STORAGE
+// ─────────────────────────────────────────────────
+function loadState() {
+  try {
+    const saved = localStorage.getItem('budget-state');
+    if (saved) state = JSON.parse(saved);
+  } catch(e) { /* first load */ }
+  render();
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('budget-state', JSON.stringify(state));
+  } catch(e) { console.error('Save failed', e); }
+}
+
+// ─────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────
+function fmt(n) {
+  return '$' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function currentMonthKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+
+function monthLabel() {
+  return new Date().toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+}
+
+function thisMonthExpenses() {
+  const key = currentMonthKey();
+  return state.expenses.filter(e => e.date.startsWith(key));
+}
+
+function spentInCat(cat) {
+  return thisMonthExpenses()
+    .filter(e => e.cat === cat)
+    .reduce((s, e) => s + e.amount, 0);
+}
+
+function totalSpent() {
+  return thisMonthExpenses().reduce((s, e) => s + e.amount, 0);
+}
+
+function monthlyDeposits() {
+  const key = currentMonthKey();
+  return state.deposits
+    .filter(d => d.date.startsWith(key))
+    .reduce((s, d) => s + d.amount, 0);
+}
+
+// ─────────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────────
+function render() {
+  renderOverview();
+  renderLog();
+  renderPlex();
+  renderSavings();
+}
+
+function renderOverview() {
+  const spent = totalSpent();
+  const left = MONTHLY_INCOME - spent;
+  const pct = Math.min((spent / MONTHLY_INCOME) * 100, 100);
+
+  document.getElementById('overview-month').textContent = monthLabel();
+  document.getElementById('overview-left').textContent = fmt(left);
+  document.getElementById('overview-left').style.color = left < 0 ? 'var(--red)' : left < 50 ? 'var(--warn)' : 'var(--text)';
+  document.getElementById('overview-spent-label').textContent = fmt(spent) + ' spent';
+
+  const bar = document.getElementById('overview-prog');
+  bar.style.width = pct + '%';
+  bar.className = 'prog-fill ' + (pct > 90 ? 'prog-over' : pct > 70 ? 'prog-warn' : 'prog-ok');
+
+  const rows = Object.entries(BUDGET).map(([cat, cfg]) => {
+    const spent = spentInCat(cat);
+    const pct = Math.min((spent / cfg.limit) * 100, 100);
+    const over = spent > cfg.limit;
+    const warn = spent > cfg.limit * 0.8;
+    const barClass = over ? 'prog-over' : warn ? 'prog-warn' : 'prog-ok';
+    return `
+      <div class="budget-row">
+        <div class="brow-stripe" style="background:${cfg.color}"></div>
+        <div class="brow-icon">${cfg.emoji}</div>
+        <div class="brow-body">
+          <div class="brow-name">${cfg.label}</div>
+          <div class="brow-bar-wrap"><div class="brow-bar-fill ${barClass}" style="width:${pct}%"></div></div>
+          <div class="brow-bar-sub">${fmt(spent)} of ${fmt(cfg.limit)} ${over ? '⚠️ over budget' : ''}</div>
+        </div>
+        <div class="brow-right">
+          <div class="brow-spent" style="color:${over ? 'var(--red)' : warn ? 'var(--warn)' : cfg.color}">${fmt(spent)}</div>
+          <div class="brow-limit">/ ${fmt(cfg.limit)}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('category-rows').innerHTML = rows;
+}
+
+function renderLog() {
+  const txs = [...thisMonthExpenses()].reverse();
+  if (!txs.length) {
+    document.getElementById('tx-list').innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-family:IBM Plex Mono,monospace;font-size:12px;">No expenses logged yet</div>';
+    return;
+  }
+  document.getElementById('tx-list').innerHTML = txs.map(tx => {
+    const cfg = BUDGET[tx.cat] || { emoji: '📦', label: tx.cat, color: '#94a3b8' };
+    return `
+      <div class="tx-item">
+        <div class="tx-emoji">${cfg.emoji}</div>
+        <div class="tx-cat">${cfg.label}</div>
+        <div class="tx-amount">-${fmt(tx.amount)}</div>
+        <button class="tx-del" onclick="deleteExpense('${tx.id}')" title="Delete">✕</button>
+      </div>`;
+  }).join('');
+}
+
+function renderPlex() {
+  const total = state.plexTotal;
+  const dad = total;
+  const combined = total + dad;
+
+  document.getElementById('plex-savings-display').textContent = fmt(total);
+  document.getElementById('plex-dad-display').textContent = `Dad matches: ${fmt(dad)} → Total deposit: ${fmt(combined)}`;
+
+  // Scenario A: duplex, need $6,250
+  const goalA = 6250;
+  const pctA = Math.min((total / goalA) * 100, 100);
+  const neededA = Math.max(goalA - total, 0);
+  document.getElementById('plex-a-saved').textContent = fmt(total);
+  document.getElementById('plex-a-needed').textContent = neededA <= 0 ? '✅ Reached!' : fmt(neededA);
+  document.getElementById('plex-a-needed').style.color = neededA <= 0 ? 'var(--accent)' : 'var(--text)';
+  document.getElementById('plex-a-bar').style.width = pctA + '%';
+  document.getElementById('plex-a-pct').textContent = Math.round(pctA) + '% there';
+  document.getElementById('plex-a-notice').innerHTML = total >= goalA
+    ? '<div class="notice notice-good"><strong>✅ Goal reached!</strong> You have enough for your half of a $250k duplex down payment. Your dad puts in the same and you\'re at the table.</div>'
+    : '';
+
+  // Scenario B: triplex, need $17,500
+  const goalB = 17500;
+  const pctB = Math.min((total / goalB) * 100, 100);
+  const neededB = Math.max(goalB - total, 0);
+  document.getElementById('plex-b-saved').textContent = fmt(total);
+  document.getElementById('plex-b-needed').textContent = neededB <= 0 ? '✅ Reached!' : fmt(neededB);
+  document.getElementById('plex-b-needed').style.color = neededB <= 0 ? 'var(--accent)' : 'var(--text)';
+  document.getElementById('plex-b-bar').style.width = pctB + '%';
+  document.getElementById('plex-b-pct').textContent = Math.round(pctB) + '% there';
+
+  // Projection based on monthly deposit average
+  const monthDep = monthlyDeposits();
+  const proj = document.getElementById('plex-projection');
+  if (monthDep > 0 && neededB > 0) {
+    const monthsA = neededA <= 0 ? 0 : Math.ceil(neededA / monthDep);
+    const monthsB = Math.ceil(neededB / monthDep);
+    proj.innerHTML = `Saving <strong style="color:var(--accent)">${fmt(monthDep)}/month</strong> this month.<br>
+      Duplex goal: ${neededA <= 0 ? '<span style="color:var(--accent)">Already reached ✅</span>' : `<strong style="color:var(--text)">${monthsA} months</strong>`}<br>
+      Triplex goal: <strong style="color:var(--text)">${monthsB} month${monthsB !== 1 ? 's' : ''}</strong> (~${Math.round(monthsB/12 * 10)/10} years)`;
+  } else if (neededB <= 0) {
+    proj.innerHTML = '<span style="color:var(--accent)">Both goals reached! 🎉</span>';
+  } else {
+    proj.innerHTML = 'Log a savings deposit this month to see your projected timeline.';
+  }
+}
+
+function renderSavings() {
+  const total = state.plexTotal;
+  const dad = total;
+  document.getElementById('savings-total').textContent = fmt(total);
+  document.getElementById('savings-dad').textContent = fmt(dad);
+  document.getElementById('savings-combined').textContent = fmt(total + dad);
+
+  const deps = [...state.deposits].reverse();
+  if (!deps.length) {
+    document.getElementById('dep-list').innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-family:IBM Plex Mono,monospace;font-size:12px;">No deposits logged yet</div>';
+    return;
+  }
+  document.getElementById('dep-list').innerHTML = deps.map(d => `
+    <div class="tx-item">
+      <div class="tx-emoji">🏠</div>
+      <div class="tx-cat">${new Date(d.date).toLocaleDateString('en-CA', {month:'short', day:'numeric', year:'numeric'})}</div>
+      <div class="tx-amount income">+${fmt(d.amount)}</div>
+      <button class="tx-del" onclick="deleteDeposit('${d.id}')" title="Delete">✕</button>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────────────────
+// ACTIONS
+// ─────────────────────────────────────────────────
+function logExpense() {
+  const amt = parseFloat(document.getElementById('log-amount').value);
+  const cat = document.getElementById('log-cat').value;
+  const notice = document.getElementById('log-notice');
+
+  if (!amt || amt <= 0) { showNotice(notice, 'warn', 'Enter a valid amount.'); return; }
+  if (!cat) { showNotice(notice, 'warn', 'Select a category.'); return; }
+
+  const cfg = BUDGET[cat];
+  const currentSpent = spentInCat(cat);
+  const newTotal = currentSpent + amt;
+
+  state.expenses.push({ id: Date.now().toString(), amount: amt, cat, date: new Date().toISOString() });
+  saveState();
+  render();
+
+  document.getElementById('log-amount').value = '';
+  document.getElementById('log-cat').value = '';
+
+  if (newTotal > cfg.limit) {
+    showNotice(notice, 'warn', `⚠️ Over budget on ${cfg.label}! You've spent ${fmt(newTotal)} of ${fmt(cfg.limit)}.`);
+  } else if (newTotal > cfg.limit * 0.8) {
+    showNotice(notice, 'warn', `Getting close on ${cfg.label} — ${fmt(cfg.limit - newTotal)} left.`);
+  } else {
+    showNotice(notice, 'good', `Logged ${fmt(amt)} to ${cfg.label}. ${fmt(cfg.limit - newTotal)} remaining.`);
+  }
+}
+
+function deleteExpense(id) {
+  state.expenses = state.expenses.filter(e => e.id !== id);
+  saveState();
+  render();
+}
+
+function logDeposit() {
+  const amt = parseFloat(document.getElementById('dep-amount').value);
+  const notice = document.getElementById('dep-notice');
+
+  if (!amt || amt <= 0) { showNotice(notice, 'warn', 'Enter a valid amount.'); return; }
+
+  state.deposits.push({ id: Date.now().toString(), amount: amt, date: new Date().toISOString() });
+  state.plexTotal = state.deposits.reduce((s, d) => s + d.amount, 0);
+  saveState();
+  render();
+
+  document.getElementById('dep-amount').value = '';
+  showNotice(notice, 'good', `✅ Deposit of ${fmt(amt)} logged! Your dad matches it — combined: ${fmt(amt * 2)}.`);
+}
+
+function deleteDeposit(id) {
+  state.deposits = state.deposits.filter(d => d.id !== id);
+  state.plexTotal = state.deposits.reduce((s, d) => s + d.amount, 0);
+  saveState();
+  render();
+}
+
+function doReset() {
+  const key = currentMonthKey();
+  state.expenses = state.expenses.filter(e => !e.date.startsWith(key));
+  saveState();
+  render();
+  document.getElementById('reset-confirm').style.display = 'none';
+}
+
+function showNotice(el, type, msg) {
+  el.innerHTML = `<div class="notice notice-${type === 'warn' ? 'warn' : 'good'}">${msg}</div>`;
+  setTimeout(() => { el.innerHTML = ''; }, 4000);
+}
+
+// ─────────────────────────────────────────────────
+// NAV
+// ─────────────────────────────────────────────────
+function showBudgetView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────
+loadState();
+</script>
+</body>
+</html>
